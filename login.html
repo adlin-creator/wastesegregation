@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CleanCity - Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f3f8f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 35px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            font-size: 50px;
+        }
+
+        .logo h1 {
+            color: #168a45;
+            font-size: 30px;
+            margin-top: 5px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #168a45;
+        }
+
+        .password-box {
+            position: relative;
+        }
+
+        .password-box input {
+            padding-right: 45px;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 13px;
+            top: 13px;
+            cursor: pointer;
+        }
+
+        .forgot {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .forgot a {
+            color: #168a45;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #168a45;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #106c36;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            padding: 0 10px;
+        }
+
+        .guest-btn {
+            width: 100%;
+            padding: 13px;
+            background: white;
+            color: #168a45;
+            border: 2px solid #168a45;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .guest-btn:hover {
+            background: #e8f5ec;
+        }
+
+        .error {
+            color: #d93025;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-icon">🌱</div>
+            <h1>CleanCity</h1>
+            <p>Let's keep our city clean together.</p>
+        </div>
+
+
+        <!-- Login Form -->
+        <form id="loginForm">
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">📧 Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+            </div>
+
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">🔒 Password</label>
+
+                <div class="password-box">
+
+                    <input
+    type="password"
+    id="password"
+    placeholder="Enter your password"
+    required
+>
+                    <span
+                        class="show-password"
+                        onclick="togglePassword()">
+                        👁️
+                    </span>
+
+                </div>
+            </div>
+
+
+            <!-- Forgot Password -->
+            <div class="forgot">
+                <a href="#" onclick="forgotPassword()">
+                    Forgot Password?
+                </a>
+            </div>
+
+
+            <!-- Error Message -->
+            <p class="error" id="errorMessage">
+                Please enter your email and password.
+            </p>
+
+
+            <!-- Login Button -->
+            <button type="submit" class="login-btn">
+                LOGIN
+            </button>
+
+        </form>
+
+
+        <!-- OR -->
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+
+        <!-- Guest Login -->
+        <button
+            type="button"
+            class="guest-btn"
+            onclick="guestLogin()">
+            👤 ENTER AS GUEST
+        </button>
+
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🌱 CleanCity Waste Management</p>
+            <p>Making our cities cleaner, together.</p>
+        </div>
+
+    </div>
+
+
+    <script>
+// NORMAL LOGIN
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const errorMessage = document.getElementById("errorMessage");
+
+    // Hide previous error
+    errorMessage.style.display = "none";
+
+    // Check only if fields are empty
+    if (email === "" || password === "") {
+        errorMessage.textContent =
+            "Please enter your email and password.";
+        errorMessage.style.display = "block";
+        return;
+    }
+
+    try {
+
+        const response = await fetch("http://localhost:3001/login", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            localStorage.setItem(
+                "cleanCityUser",
+                JSON.stringify(data.user)
+            );
+
+            // Login successful
+            window.location.href = "success.html";
+
+        } else {
+
+            errorMessage.textContent =
+                data.message || "Invalid email or password.";
+
+            errorMessage.style.display = "block";
+        }
+
+    } catch (error) {
+
+        console.error("Login error:", error);
+
+        errorMessage.textContent =
+            "Unable to connect to the server. Please make sure the backend is running.";
+
+        errorMessage.style.display = "block";
+    }
+
+});
+
+        // SHOW / HIDE PASSWORD
+        function togglePassword() {
+
+            const password = document.getElementById("password");
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+            } else {
+
+                password.type = "password";
+
+            }
+        }
+
+
+        // FORGOT PASSWORD
+        function forgotPassword() {
+
+            alert("Password reset option will be available here.");
+
+        }
+
+
+        // GUEST LOGIN
+        function guestLogin() {
+
+            // Guest goes directly to Home
+            window.location.href = "home.html";
+
+        }
+
+    </script>
+    <script src="language.js"></script>
+
+</body>
+</html>

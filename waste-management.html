@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Waste Management - CleanCity</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f3f8f4;
+}
+
+header {
+    background: #16833a;
+    color: white;
+    padding: 20px;
+    border-radius: 0 0 20px 20px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+    padding: 20px;
+}
+
+.back {
+    border: none;
+    background: none;
+    color: #16833a;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.box h2 {
+    color: #16833a;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap: 15px;
+}
+
+.stat {
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.number {
+    font-size: 30px;
+    font-weight: bold;
+    color: #16833a;
+}
+
+.item {
+    background: #f3f8f4;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 12px;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    margin-top: 7px;
+    border-radius: 20px;
+    background: #fff3cd;
+    color: #856404;
+    font-size: 13px;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 15px;
+    background: #16833a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+}
+.box input,
+.box select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.box label {
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>♻️ CleanCity</h1>
+
+<p>Waste Management Team</p>
+
+</header>
+
+
+<div class="container">
+
+<button class="back"
+        onclick="goBack()">
+
+← Back to Authority Home
+
+</button>
+
+
+<div class="box">
+
+<h2>♻️ Waste Management</h2>
+
+<p>
+Manage waste collection, segregation
+and transportation activities.
+</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="number" id="collectionRequests">0</div>
+
+<p>Collection Requests</p>
+
+</div>
+
+
+<div class="stat">
+
+<div class="number" id="pendingRequests">0</div>
+
+<p>Pending</p>
+
+</div>
+
+
+<div class="stat">
+
+<div class="number" id="progressRequests">0</div>
+
+<p>In Progress</p>
+
+</div>
+
+
+<div class="stat">
+
+<div class="number" id="completedRequests">0</div>
+
+<p>Completed</p>
+
+</div>
+
+</div>
+
+
+>
+
+</div>
+<div class="box">
+
+<h2>🚛 Add Collection Vehicle</h2>
+
+<label>Vehicle Name</label>
+<input
+    type="text"
+    id="vehicleName"
+    placeholder="Example: Collection Vehicle 01"
+>
+
+<label>Vehicle Number</label>
+<input
+    type="text"
+    id="vehicleNumber"
+    placeholder="Example: TN 38 AB 1234"
+>
+
+<label>Route</label>
+<input
+    type="text"
+    id="vehicleRoute"
+    placeholder="Example: Ward 8 → Ward 9"
+>
+
+<label>Location</label>
+<input
+    type="text"
+    id="vehicleLocation"
+    placeholder="Enter current area"
+>
+
+<label>Ward</label>
+<input
+    type="text"
+    id="vehicleWard"
+    placeholder="Example: Ward 8"
+>
+
+<label>Collection Time</label>
+<input
+    type="text"
+    id="collectionTime"
+    placeholder="Example: 7:00 AM - 9:00 AM"
+>
+
+<label>Status</label>
+
+<select id="vehicleStatus">
+
+    <option value="Collection Pending">
+        Collection Pending
+    </option>
+
+    <option value="On Route">
+        On Route
+    </option>
+
+    <option value="Completed">
+        Completed
+    </option>
+
+</select>
+
+<button onclick="saveVehicle()">
+    💾 Save Vehicle Details
+</button>
+
+<p id="vehicleMessage"></p>
+
+</div>
+
+
+
+<div class="box">
+
+<h2>🚛 Collection Activities</h2>
+
+<div id="collectionActivities">
+
+    <p style="color:#666;">
+        Loading collection activities...
+    </p>
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<h2>♻️ Segregation Issues</h2>
+
+<div id="segregationIssues">
+
+    <p style="color:#666;">
+        Loading segregation issues...
+    </p>
+
+</div>
+
+</div>
+
+<button onclick="window.location.href='view-waste-complaints.html'">
+    📋 View Waste Complaints
+</button>
+
+</div>
+
+
+<script>
+
+function goBack() {
+
+    window.location.href =
+        "authority-home.html";
+
+}
+// ==========================================
+// LOAD WASTE MANAGEMENT DATA
+// ==========================================
+
+async function loadWasteManagement() {
+
+    try {
+
+        // ----------------------------------
+        // LOAD COMPLAINTS
+        // ----------------------------------
+
+        const reportsResponse =
+            await fetch(
+                "http://localhost:3001/reports"
+            );
+
+        if (!reportsResponse.ok) {
+            throw new Error(
+                "Unable to load reports"
+            );
+        }
+
+        const reports =
+            await reportsResponse.json();
+
+
+        // ----------------------------------
+        // CALCULATE STATISTICS
+        // ----------------------------------
+
+        const total =
+            reports.length;
+
+        const pending =
+            reports.filter(
+                report =>
+                    report.status === "Pending"
+            ).length;
+
+        const progress =
+            reports.filter(
+                report =>
+                    report.status === "In Progress"
+            ).length;
+
+        const completed =
+            reports.filter(
+                report =>
+                    report.status === "Resolved"
+            ).length;
+
+
+        document.getElementById(
+            "collectionRequests"
+        ).innerText = total;
+
+
+        document.getElementById(
+            "pendingRequests"
+        ).innerText = pending;
+
+
+        document.getElementById(
+            "progressRequests"
+        ).innerText = progress;
+
+
+        document.getElementById(
+            "completedRequests"
+        ).innerText = completed;
+
+
+        // ----------------------------------
+        // SEGREGATION ISSUES
+        // ----------------------------------
+
+        const issueContainer =
+            document.getElementById(
+                "segregationIssues"
+            );
+
+
+        const segregationReports =
+            reports.filter(function(report) {
+
+                return (
+                    report.waste_type &&
+                    (
+                        report.waste_type
+                            .toLowerCase()
+                            .includes("mixed") ||
+
+                        report.waste_type
+                            .toLowerCase()
+                            .includes("other")
+                    )
+                );
+
+            });
+
+
+        if (segregationReports.length === 0) {
+
+            issueContainer.innerHTML = `
+                <p style="color:#666;">
+                    ✅ No segregation issues
+                    reported.
+                </p>
+            `;
+
+        } else {
+
+            issueContainer.innerHTML = "";
+
+            segregationReports
+                .slice(0, 10)
+                .forEach(function(report) {
+
+                    issueContainer.innerHTML += `
+                        <div class="item">
+
+                            🔴
+                            <strong>
+                                ${report.waste_type}
+                            </strong>
+
+                            <br>
+
+                            Ward:
+                            ${report.ward || "Not assigned"}
+
+                            <br>
+
+                            ${report.description}
+
+                            <br>
+
+                            Status:
+                            ${report.status}
+
+                        </div>
+                    `;
+
+                });
+
+        }
+
+
+        // ----------------------------------
+        // COLLECTION ACTIVITIES
+        // ----------------------------------
+
+        const collectionResponse =
+            await fetch(
+                "http://localhost:3001/collection-activities"
+            );
+
+
+        if (!collectionResponse.ok) {
+            throw new Error(
+                "Unable to load collection activities"
+            );
+        }
+
+
+        const activities =
+            await collectionResponse.json();
+
+
+        const activitiesContainer =
+            document.getElementById(
+                "collectionActivities"
+            );
+
+
+        if (activities.length === 0) {
+
+            activitiesContainer.innerHTML = `
+                <p style="color:#666;">
+                    No collection activities
+                    available.
+                </p>
+            `;
+
+        } else {
+
+            activitiesContainer.innerHTML = "";
+
+
+            activities.forEach(
+    function(activity) {
+
+        activitiesContainer.innerHTML += `
+
+            <div class="item">
+
+                <strong>
+                    🚛
+                    ${activity.vehicle_number ||
+                    activity.vehicle_name}
+                </strong>
+
+                <p>
+                    Route:
+                    ${activity.route}
+                </p>
+
+                📍
+                ${activity.location}
+
+                <br><br>
+
+                <span class="status">
+                    ${activity.status}
+                </span>
+
+                <br><br>
+
+                <label>
+                    <strong>Update Vehicle Status:</strong>
+                </label>
+
+                <select
+                    onchange="updateVehicleStatus(
+                        ${activity.id},
+                        this.value
+                    )"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:8px;
+                        border:1px solid #ccc;
+                        border-radius:8px;
+                    "
+                >
+
+                    <option value="Collection Pending"
+                        ${activity.status === "Collection Pending"
+                            ? "selected"
+                            : ""}>
+                        Collection Pending
+                    </option>
+
+                    <option value="On Route"
+                        ${activity.status === "On Route"
+                            ? "selected"
+                            : ""}>
+                        On Route
+                    </option>
+
+                    <option value="Completed"
+                        ${activity.status === "Completed"
+                            ? "selected"
+                            : ""}>
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+        `;
+
+    }
+);
+
+                   
+
+                }
+            
+
+        }
+
+
+
+    catch (error) {
+
+        console.error(
+            "Waste management error:",
+            error
+        );
+
+
+        document.getElementById(
+            "collectionActivities"
+        ).innerHTML = `
+
+            <p style="color:#d9534f;">
+                ⚠️ Unable to load
+                waste management data.
+                <br><br>
+                Please make sure the
+                CleanCity backend is running.
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+// Load data when page opens
+
+loadWasteManagement();
+async function updateVehicleStatus(id, status) {
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/collection-activities/"
+            + id
+            + "/status",
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    status: status
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            alert(
+                data.message ||
+                "Unable to update vehicle status."
+            );
+
+            return;
+        }
+
+        alert(
+            "🚛 Vehicle status updated successfully! 🌱"
+        );
+
+        loadWasteManagement();
+
+    } catch (error) {
+
+        console.error(
+            "Vehicle status error:",
+            error
+        );
+
+        alert(
+            "Unable to connect to the CleanCity backend."
+        );
+    }
+}
+async function saveVehicle() {
+
+    const vehicleName =
+        document.getElementById("vehicleName").value.trim();
+
+    const vehicleNumber =
+        document.getElementById("vehicleNumber").value.trim();
+
+    const vehicleRoute =
+        document.getElementById("vehicleRoute").value.trim();
+
+    const vehicleLocation =
+        document.getElementById("vehicleLocation").value.trim();
+
+    const vehicleWard =
+        document.getElementById("vehicleWard").value.trim();
+
+    const collectionTime =
+        document.getElementById("collectionTime").value.trim();
+
+    const vehicleStatus =
+        document.getElementById("vehicleStatus").value;
+
+    const message =
+        document.getElementById("vehicleMessage");
+
+
+    if (
+        !vehicleName ||
+        !vehicleNumber ||
+        !vehicleRoute ||
+        !vehicleLocation ||
+        !vehicleWard ||
+        !collectionTime
+    ) {
+
+        message.style.color = "#d9534f";
+
+        message.innerText =
+            "Please fill all vehicle details.";
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/collection-vehicles",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    vehicle_name: vehicleName,
+
+                    vehicle_number: vehicleNumber,
+
+                    route: vehicleRoute,
+
+                    location: vehicleLocation,
+
+                    status: vehicleStatus,
+
+                    ward: vehicleWard,
+
+                    collection_time: collectionTime,
+
+                    latitude: null,
+
+                    longitude: null
+
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            message.style.color = "#d9534f";
+
+            message.innerText =
+                data.message ||
+                "Unable to save vehicle details.";
+
+            return;
+        }
+
+
+        message.style.color = "#16833a";
+
+        message.innerText =
+            "✅ Vehicle details saved successfully.";
+
+
+        document.getElementById(
+            "vehicleName"
+        ).value = "";
+
+        document.getElementById(
+            "vehicleNumber"
+        ).value = "";
+
+        document.getElementById(
+            "vehicleRoute"
+        ).value = "";
+
+        document.getElementById(
+            "vehicleLocation"
+        ).value = "";
+
+        document.getElementById(
+            "vehicleWard"
+        ).value = "";
+
+        document.getElementById(
+            "collectionTime"
+        ).value = "";
+
+
+        loadWasteManagement();
+
+
+    } catch (error) {
+
+        console.error(
+            "Save vehicle error:",
+            error
+        );
+
+        message.style.color = "#d9534f";
+
+        message.innerText =
+            "Unable to connect to the CleanCity backend.";
+    }
+}
+
+</script>
+
+</body>
+
+</html>

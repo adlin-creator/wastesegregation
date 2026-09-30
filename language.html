@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CleanCity - Language</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f8f4;
+        }
+
+        header {
+            background: #168a45;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .language {
+            background: white;
+            margin: 10px 0;
+            padding: 17px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            cursor: pointer;
+            font-size: 17px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .language:hover {
+            background: #e8f5ec;
+        }
+
+        .back {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #168a45;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🌐 Select Language</h1>
+    <p>Choose your preferred language</p>
+</header>
+
+<div class="container">
+
+    <div class="language" onclick="selectLanguage('as')">
+        Assamese <span>অসমীয়া</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('bn')">
+        Bengali <span>বাংলা</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('brx')">
+        Bodo <span>बड़ो</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('doi')">
+        Dogri <span>डोगरी</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('gu')">
+        Gujarati <span>ગુજરાતી</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('hi')">
+        Hindi <span>हिन्दी</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('kn')">
+        Kannada <span>ಕನ್ನಡ</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('ks')">
+        Kashmiri <span>कॉशुर</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('kok')">
+        Konkani <span>कोंकणी</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('mai')">
+        Maithili <span>मैथिली</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('ml')">
+        Malayalam <span>മലയാളം</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('mni')">
+        Manipuri / Meitei <span>মৈতৈলোন্</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('mr')">
+        Marathi <span>मराठी</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('ne')">
+        Nepali <span>नेपाली</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('or')">
+        Odia <span>ଓଡ଼ିଆ</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('pa')">
+        Punjabi <span>ਪੰਜਾਬੀ</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('sa')">
+        Sanskrit <span>संस्कृतम्</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('sat')">
+        Santali <span>ᱥᱟᱱᱛᱟᱲᱤ</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('sd')">
+        Sindhi <span>سنڌي</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('ta')">
+        Tamil <span>தமிழ்</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('te')">
+        Telugu <span>తెలుగు</span>
+    </div>
+
+    <div class="language" onclick="selectLanguage('ur')">
+        Urdu <span>اردو</span>
+    </div>
+
+    <button class="back" onclick="goBack()">
+        ← Back to Home
+    </button>
+
+</div>
+
+<script>
+
+function selectLanguage(language) {
+
+    // Save selected language
+    localStorage.setItem("cleanCityLanguage", language);
+
+    // Directly open home page
+    window.location.href = "home.html";
+}
+function goBack() {
+    window.location.href = "home.html";
+}
+
+</script>
+<script src="language.js"></script>
+
+
+</body>
+</html>

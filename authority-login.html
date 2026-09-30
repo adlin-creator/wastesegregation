@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CleanCity - Authority Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f8f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-box {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #16833a;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 10px;
+            background: #16833a;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #10662d;
+        }
+
+        .back {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .back a {
+            color: #16833a;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <h1>🏛️ CleanCity</h1>
+
+    <p class="subtitle">Authority Login</p>
+
+    <form onsubmit="authorityLogin(event)">
+
+        <label>Authority Type</label>
+
+        <select id="authorityType" required>
+            <option value="">Select Authority</option>
+            <option>Municipal Corporation</option>
+            <option>Sanitation Department</option>
+            <option>Waste Management Team</option>
+            <option>Sanitary Inspector</option>
+            <option>Ward Officer</option>
+        </select>
+
+        <label>Username</label>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter username"
+            required
+        >
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            required
+        >
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <div class="back">
+        <a href="login.html">← Back to User Login</a>
+    </div>
+
+</div>
+
+<script>
+
+async function authorityLogin(event) {
+
+    event.preventDefault();
+
+    const authority =
+        document.getElementById("authorityType").value;
+
+    const username =
+        document.getElementById("username").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/authority-login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    authority_type: authority,
+                    username: username,
+                    password: password
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            alert(
+                data.message ||
+                "Invalid authority login details"
+            );
+
+            return;
+        }
+
+        localStorage.setItem(
+            "authorityType",
+            data.authority.authority_type
+        );
+
+        localStorage.setItem(
+            "authorityUsername",
+            data.authority.username
+        );
+
+        window.location.href =
+            "authority-success.html";
+
+    } catch (error) {
+
+        console.error(
+            "Authority login error:",
+            error
+        );
+
+        alert(
+            "Unable to connect to the CleanCity backend."
+        );
+    }
+}
+</script>
+
+</body>
+</html>

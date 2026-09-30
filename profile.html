@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CleanCity - Profile</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f3f8f4;
+    color: #222;
+}
+
+header {
+    background: #168a45;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back {
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.container {
+    width: 90%;
+    max-width: 650px;
+    margin: 25px auto;
+}
+
+.profile-card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.profile-icon {
+    font-size: 65px;
+    margin-bottom: 10px;
+}
+
+.profile-card h2 {
+    color: #168a45;
+    margin-bottom: 5px;
+}
+
+.info {
+    text-align: left;
+    margin-top: 25px;
+    line-height: 2;
+}
+
+.points {
+    margin-top: 20px;
+    background: #e4f4e9;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.points-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #168a45;
+}
+
+.level {
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+.home-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 13px;
+    border: none;
+    border-radius: 25px;
+    background: #168a45;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="back" onclick="goHome()">←</div>
+
+    <h1>👤 My Profile</h1>
+
+</header>
+
+<div class="container">
+
+    <div class="profile-card">
+
+        <div class="profile-icon">
+            👤
+        </div>
+
+        <h2 id="profileName">Loading...</h2>
+
+<p id="profileEmail">Loading...</p>
+
+
+        <div class="info">
+
+            <p>📍 Location: Your Location</p>
+
+            <p>
+    📋 Reports Submitted:
+    <span id="reportsCount">0</span>
+</p>
+        </div>
+
+
+        <div class="points">
+
+            <p>⭐ Cleanliness Points</p>
+
+            <div class="points-number" id="profilePoints">
+    0
+</div>
+
+<div class="level" id="profileLevel">
+    🏆 Level 1 - New Cleaner
+</div>
+
+        </div>
+
+
+        <button class="home-btn"
+                onclick="goHome()">
+
+            🏠 Back to Home
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function loadProfile() {
+
+    try {
+
+        // Get logged-in user
+        const storedUser = localStorage.getItem("cleanCityUser");
+        if (!storedUser) {
+
+            alert("Please login first.");
+
+            window.location.href = "login.html";
+
+            return;
+        }
+
+        const user = JSON.parse(storedUser);
+
+        const userEmail = user.email;
+
+        if (!userEmail) {
+
+            alert("User information not found.");
+
+            return;
+        }
+
+        // Show user information
+        document.getElementById("profileName").innerText =
+            user.name || "CleanCity User";
+
+        document.getElementById("profileEmail").innerText =
+            user.email;
+
+        // Get user's reports from backend
+        const response = await fetch(
+            "http://localhost:3001/reports?email=" +
+            encodeURIComponent(userEmail)
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load reports"
+            );
+
+        }
+
+        const reports = await response.json();
+
+        // Display actual report count
+        document.getElementById("reportsCount").innerText =
+            reports.length;
+
+    } catch (error) {
+
+        console.error(
+            "Profile loading error:",
+            error
+        );
+
+        document.getElementById("profileName").innerText =
+            "Unable to load profile";
+
+        document.getElementById("profileEmail").innerText =
+            "";
+
+    }
+
+}
+
+
+function goHome() {
+
+    window.location.href = "home.html";
+
+}
+async function loadProfilePoints() {
+
+    const storedUser =
+        localStorage.getItem("cleanCityUser");
+
+    if (!storedUser) {
+        return;
+    }
+
+    const user =
+        JSON.parse(storedUser);
+
+    if (!user.email) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:3001/users/points?email=" +
+                encodeURIComponent(user.email)
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || "Unable to load points"
+            );
+        }
+
+        document.getElementById("profilePoints").textContent =
+            data.points;
+
+        const points =
+            Number(data.points);
+
+        const level =
+            Math.floor(points / 100) + 1;
+
+        const levelTitle =
+            level === 1
+                ? "New Cleaner"
+                : level === 2
+                ? "Clean City Helper"
+                : "Clean City Champion";
+
+        document.getElementById("profileLevel").textContent =
+            "🏆 Level " + level + " - " + levelTitle;
+
+    } catch (error) {
+
+        console.error(
+            "Unable to load profile points:",
+            error
+        );
+
+    }
+}
+loadProfilePoints();
+
+// Load profile when page opens
+loadProfile();
+
+
+</script>
+
+<script src="language.js"></script>
+<script src="language.js"></script>
+
+</body>
+
+</html>

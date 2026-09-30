@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CleanCity - Reports</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f8f4;
+        }
+
+        header {
+            background: #16833a;
+            color: white;
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .back {
+            border: none;
+            background: none;
+            color: #16833a;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .department {
+            background: white;
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .report {
+            background: white;
+            padding: 20px;
+
+            border-radius: 18px;
+
+            margin-bottom: 20px;
+
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .report h2 {
+            color: #16833a;
+        }
+
+        .info {
+            margin: 10px 0;
+            color: #444;
+        }
+
+        .status {
+            display: inline-block;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            background: #fff3cd;
+
+            color: #856404;
+
+            font-size: 13px;
+        }
+
+        select {
+            width: 100%;
+
+            padding: 12px;
+
+            margin-top: 15px;
+
+            border-radius: 10px;
+
+            border: 1px solid #ccc;
+        }
+
+        button.update {
+            width: 100%;
+
+            margin-top: 12px;
+
+            padding: 12px;
+
+            background: #16833a;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+        }
+
+        .location {
+            background: #eef7f0;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            margin-top: 12px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>📋 User Reports & Complaints</h1>
+
+</header>
+
+
+<div class="container">
+
+    <button class="back"
+            onclick="goBack()">
+
+        ← Back to Dashboard
+
+    </button>
+
+
+    <div class="department">
+
+        <strong>Assigned Authority:</strong>
+
+        <p id="departmentName">
+            All Departments
+        </p>
+
+    </div>
+
+
+    <!-- REPORT 1 -->
+
+    <div class="report">
+
+        <h2>🗑️ Garbage Dump Report</h2>
+
+        <div class="info">
+            👤 Reported by: Citizen
+        </div>
+
+        <div class="info">
+            📅 Date: 12 September 2026
+        </div>
+
+        <div class="info">
+            📝 Complaint:
+            Garbage has been dumped near the road.
+        </div>
+
+        <div class="location">
+
+            📍 <strong>Location:</strong><br>
+
+            Main Road, Ward 12
+
+        </div>
+
+        <p>
+            Current Status:
+            <span class="status"
+                  id="status1">
+                Reported
+            </span>
+        </p>
+
+
+        <select id="select1">
+
+            <option>Reported</option>
+
+            <option>Assigned</option>
+
+            <option>In Progress</option>
+
+            <option>Resolved</option>
+
+        </select>
+
+
+        <button class="update"
+                onclick="updateStatus('select1','status1')">
+
+            Update Status
+
+        </button>
+
+    </div>
+
+
+    <!-- REPORT 2 -->
+
+    <div class="report">
+
+        <h2>♻️ Waste Segregation Issue</h2>
+
+        <div class="info">
+            👤 Reported by: Citizen
+        </div>
+
+        <div class="info">
+            📅 Date: 12 September 2026
+        </div>
+
+        <div class="info">
+            📝 Complaint:
+            Mixed waste is being disposed improperly.
+        </div>
+
+        <div class="location">
+
+            📍 <strong>Location:</strong><br>
+
+            Market Area, Ward 8
+
+        </div>
+
+        <p>
+            Current Status:
+            <span class="status"
+                  id="status2">
+                Assigned
+            </span>
+        </p>
+
+
+        <select id="select2">
+
+            <option>Reported</option>
+
+            <option selected>Assigned</option>
+
+            <option>In Progress</option>
+
+            <option>Resolved</option>
+
+        </select>
+
+
+        <button class="update"
+                onclick="updateStatus('select2','status2')">
+
+            Update Status
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const department =
+    localStorage.getItem("selectedDepartment");
+
+if (department) {
+
+    document.getElementById(
+        "departmentName"
+    ).innerHTML = department;
+
+}
+
+
+function updateStatus(selectId, statusId) {
+
+    const selected =
+        document.getElementById(selectId).value;
+
+    document.getElementById(
+        statusId
+    ).innerText = selected;
+
+}
+
+
+function goBack() {
+
+    window.location.href =
+        "authority-home.html";
+
+}
+
+</script>
+
+</body>
+
+</html>

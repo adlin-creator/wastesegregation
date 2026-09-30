@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Identify Waste - CleanCity</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f3f8f4;
+    color: #222;
+}
+
+
+/* HEADER */
+
+.header {
+    background: #168a45;
+    color: white;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back {
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+
+/* CONTAINER */
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+/* INTRO */
+
+.intro {
+    text-align: center;
+}
+
+.intro h2 {
+    color: #106c36;
+}
+
+.intro p {
+    color: #666;
+    line-height: 1.5;
+}
+
+
+/* CARD */
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-top: 18px;
+    border-radius: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+
+/* UPLOAD */
+
+.upload {
+    text-align: center;
+    border: 2px dashed #168a45;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.upload-icon {
+    font-size: 55px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.upload-button {
+    display: inline-block;
+    background: #168a45;
+    color: white;
+    padding: 13px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+
+/* IMAGE */
+
+#preview {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    margin-top: 15px;
+    border-radius: 12px;
+    display: none;
+}
+
+
+/* SELECT */
+
+#typeSection {
+    display: none;
+    margin-top: 20px;
+}
+
+label {
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+
+/* BUTTON */
+
+.identify-button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #106c36;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+}
+
+
+/* RESULT */
+
+#result {
+    display: none;
+}
+
+.result-title {
+    color: #168a45;
+}
+
+.info-box {
+    background: #e4f4e9;
+    padding: 16px;
+    margin-top: 12px;
+    border-radius: 12px;
+}
+
+.info-box h3 {
+    color: #106c36;
+    margin-top: 0;
+}
+
+.waste-name {
+    font-size: 23px;
+    font-weight: bold;
+    color: #106c36;
+}
+
+.category {
+    font-weight: bold;
+    color: #168a45;
+}
+
+li {
+    margin-bottom: 9px;
+    line-height: 1.4;
+}
+
+
+/* ACTION BUTTONS */
+
+.action-button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.another {
+    background: #e4f4e9;
+    color: #106c36;
+}
+
+.report {
+    background: #168a45;
+    color: white;
+}
+
+.home {
+    background: #106c36;
+    color: white;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <span class="back"
+          onclick="goHome()">
+
+        ←
+
+    </span>
+
+    <h2>♻️ Identify Waste</h2>
+
+</div>
+
+
+
+<div class="container">
+
+
+<!-- INTRO -->
+
+<div class="intro">
+
+    <h2>🤖 Waste Information</h2>
+
+    <p>
+        Upload a photo of waste and select its type
+        to learn about its category and proper disposal.
+    </p>
+
+</div>
+
+
+
+<!-- UPLOAD CARD -->
+
+<div class="card">
+
+    <div class="upload">
+
+        <div class="upload-icon">
+            📸
+        </div>
+
+        <h3>
+            Upload Waste Photo
+        </h3>
+
+        <p>
+            Take a photo or choose one from your gallery.
+        </p>
+
+
+        <label
+            for="wastePhoto"
+            class="upload-button">
+
+            📷 Upload Photo
+
+        </label>
+
+
+        <input
+            type="file"
+            id="wastePhoto"
+            accept="image/*"
+            capture="environment">
+
+
+        <img
+            id="preview"
+            alt="Waste photo">
+
+
+        <!-- WASTE TYPE -->
+
+        <div id="typeSection">
+
+            <label>
+                Select Waste Type
+            </label>
+
+
+            <select id="wasteType">
+
+                <option value="">
+                    -- Select Waste Type --
+                </option>
+
+                <option value="wet">
+                    🟢 Wet / Food Waste
+                </option>
+
+                <option value="plastic">
+                    🔵 Plastic Waste
+                </option>
+
+                <option value="paper">
+                    📄 Paper / Cardboard
+                </option>
+
+                <option value="glass">
+                    🍾 Glass Waste
+                </option>
+
+                <option value="metal">
+                    🥫 Metal Waste
+                </option>
+
+                <option value="ewaste">
+                    💻 E-Waste
+                </option>
+
+                <option value="textile">
+                    👕 Textile Waste
+                </option>
+
+                <option value="sanitary">
+                    🧻 Sanitary Waste
+                </option>
+
+                <option value="hazardous">
+                    ⚠️ Hazardous Waste
+                </option>
+
+                <option value="other">
+                    ♻️ Other Waste
+                </option>
+
+            </select>
+
+
+            <button
+                class="identify-button"
+                id="identifyButton"
+                onclick="showWasteInformation()">
+
+                🔍 Identify Waste
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- RESULT -->
+
+<div class="card"
+     id="result">
+
+    <h2 class="result-title">
+        ✅ Waste Information
+    </h2>
+
+
+    <!-- NAME -->
+
+    <div class="info-box">
+
+        <h3>
+            Waste Type
+        </h3>
+
+        <div
+            class="waste-name"
+            id="wasteName">
+
+            -
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CATEGORY -->
+
+    <div class="info-box">
+
+        <h3>
+            🗂️ Category
+        </h3>
+
+        <p
+            class="category"
+            id="category">
+
+            -
+
+        </p>
+
+    </div>
+
+
+
+    <!-- DESCRIPTION -->
+
+    <div class="info-box">
+
+        <h3>
+            📖 About This Waste
+        </h3>
+
+        <p id="description">
+            -
+        </p>
+
+    </div>
+
+
+
+    <!-- BIN -->
+
+    <div class="info-box">
+
+        <h3>
+            🗑️ Where Should It Go?
+        </h3>
+
+        <p id="bin">
+            -
+        </p>
+
+    </div>
+
+
+
+    <!-- DISPOSAL -->
+
+    <div class="info-box">
+
+        <h3>
+            ♻️ How to Dispose Properly
+        </h3>
+
+        <ul id="disposal">
+        </ul>
+
+    </div>
+
+
+
+    <!-- ENVIRONMENT -->
+
+    <div class="info-box">
+
+        <h3>
+            🌱 Environmental Impact
+        </h3>
+
+        <p id="environment">
+            -
+        </p>
+
+    </div>
+
+
+
+    <!-- BUTTONS -->
+
+    <button
+        class="action-button another"
+        onclick="tryAnother()">
+
+        🔄 Identify Another Waste
+
+    </button>
+
+
+    <button
+        class="action-button report"
+        onclick="reportWaste()">
+
+        📢 Report Improper Disposal
+
+    </button>
+
+
+    <button
+        class="action-button home"
+        onclick="goHome()">
+
+        🏠 Back to Home
+
+    </button>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================
+   PHOTO UPLOAD
+===================================== */
+
+document
+.getElementById("wastePhoto")
+.addEventListener("change", function(event) {
+
+    const file = event.target.files[0];
+
+    if (file) {
+
+        const preview =
+            document.getElementById("preview");
+
+        preview.src =
+            URL.createObjectURL(file);
+
+        preview.style.display = "block";
+
+
+        document.getElementById("typeSection")
+            .style.display = "block";
+
+
+        document.getElementById("identifyButton")
+            .style.display = "block";
+
+
+        document.getElementById("result")
+            .style.display = "none";
+
+    }
+
+});
+
+
+
+/* =====================================
+   WASTE INFORMATION
+===================================== */
+
+function showWasteInformation() {
+
+
+    const type =
+        document.getElementById("wasteType").value;
+
+
+    if (type === "") {
+
+        alert("Please select the waste type.");
+
+        return;
+
+    }
+
+
+    let name = "";
+    let category = "";
+    let description = "";
+    let bin = "";
+    let disposal = [];
+    let environment = "";
+
+
+
+/* =====================================
+   WET WASTE
+===================================== */
+
+if (type === "wet") {
+
+    name = "Wet / Food Waste";
+
+    category =
+        "Biodegradable Waste";
+
+    description =
+        "Wet waste includes food leftovers, fruit peels, vegetable waste and other organic materials that can naturally decompose.";
+
+    bin =
+        "🟢 Green / Wet Waste Collection";
+
+    disposal = [
+
+        "Keep food waste separate from dry waste.",
+
+        "Put it in the designated wet-waste container.",
+
+        "Use composting facilities where available.",
+
+        "Do not mix batteries, glass or chemicals with wet waste."
+
+    ];
+
+    environment =
+        "Proper management of organic waste can support composting and reduce the amount of waste sent for disposal.";
+
+}
+
+
+
+/* =====================================
+   PLASTIC
+===================================== */
+
+else if (type === "plastic") {
+
+    name =
+        "Plastic Waste";
+
+    category =
+        "Dry / Recyclable Waste";
+
+    description =
+        "Plastic waste includes bottles, wrappers, containers, bags and other plastic products.";
+
+    bin =
+        "🔵 Blue / Dry Waste Collection";
+
+    disposal = [
+
+        "Empty containers before disposal.",
+
+        "Keep plastic separate from food waste.",
+
+        "Place recyclable plastic with dry waste.",
+
+        "Give recyclable plastic to an appropriate collection or recycling facility."
+
+    ];
+
+    environment =
+        "Proper plastic segregation helps recycling and reduces plastic litter and pollution.";
+
+}
+
+
+
+/* =====================================
+   PAPER
+===================================== */
+
+else if (type === "paper") {
+
+    name =
+        "Paper / Cardboard";
+
+    category =
+        "Dry / Recyclable Waste";
+
+    description =
+        "Paper waste includes newspapers, notebooks, office paper, cartons and cardboard boxes.";
+
+    bin =
+        "🔵 Blue / Dry Waste Collection";
+
+    disposal = [
+
+        "Keep paper clean and dry.",
+
+        "Separate paper from food waste.",
+
+        "Flatten cardboard boxes when possible.",
+
+        "Give recyclable paper to a dry-waste collector or recycler."
+
+    ];
+
+    environment =
+        "Paper recycling helps recover useful material and reduces the demand for new raw materials.";
+
+}
+
+
+
+/* =====================================
+   GLASS
+===================================== */
+
+else if (type === "glass") {
+
+    name =
+        "Glass Waste";
+
+    category =
+        "Recyclable Waste";
+
+    description =
+        "Glass waste includes bottles, jars and other glass containers.";
+
+    bin =
+        "🔵 Dry Waste / Glass Collection";
+
+    disposal = [
+
+        "Keep glass separate from wet waste.",
+
+        "Do not intentionally break glass.",
+
+        "Handle broken glass carefully.",
+
+        "Give glass to the appropriate collection or recycling facility."
+
+    ];
+
+    environment =
+        "Glass can often be recycled, reducing the need for new raw materials.";
+
+}
+
+
+
+/* =====================================
+   METAL
+===================================== */
+
+else if (type === "metal") {
+
+    name =
+        "Metal Waste";
+
+    category =
+        "Dry / Recyclable Waste";
+
+    description =
+        "Metal waste includes aluminium cans, steel cans, tins and other recyclable metal objects.";
+
+    bin =
+        "🔵 Blue / Dry Waste Collection";
+
+    disposal = [
+
+        "Empty food and drink containers.",
+
+        "Keep metal separate from wet waste.",
+
+        "Place recyclable metal with dry waste.",
+
+        "Send it to an appropriate recycling facility."
+
+    ];
+
+    environment =
+        "Recycling metals reduces the need for new raw-material extraction.";
+
+}
+
+
+
+/* =====================================
+   E-WASTE
+===================================== */
+
+else if (type === "ewaste") {
+
+    name =
+        "Electronic Waste";
+
+    category =
+        "E-Waste / Special Waste";
+
+    description =
+        "E-waste includes old phones, computers, chargers, keyboards, cables and other electrical or electronic equipment.";
+
+    bin =
+        "🔴 Authorised E-Waste Collection";
+
+    disposal = [
+
+        "Do not put electronic items in normal household bins.",
+
+        "Keep e-waste separate.",
+
+        "Do not dismantle electronic devices yourself.",
+
+        "Give e-waste to an appropriate authorised collection or recycling facility."
+
+    ];
+
+    environment =
+        "Proper e-waste management helps recover useful materials and prevents inappropriate disposal of electronic components.";
+
+}
+
+
+
+/* =====================================
+   TEXTILE
+===================================== */
+
+else if (type === "textile") {
+
+    name =
+        "Textile / Cloth Waste";
+
+    category =
+        "Textile Waste";
+
+    description =
+        "Textile waste includes unwanted clothes, fabric, curtains and other textile materials.";
+
+    bin =
+        "♻️ Textile Collection / Reuse";
+
+    disposal = [
+
+        "Reuse usable clothes whenever possible.",
+
+        "Donate clothes that are still usable.",
+
+        "Keep unusable textiles separate where collection is available.",
+
+        "Use an appropriate textile recycling or collection facility."
+
+    ];
+
+    environment =
+        "Reusing and recycling textiles can reduce waste and conserve resources.";
+
+}
+
+
+
+/* =====================================
+   SANITARY
+===================================== */
+
+else if (type === "sanitary") {
+
+    name =
+        "Sanitary Waste";
+
+    category =
+        "Sanitary Waste";
+
+    description =
+        "Sanitary waste includes used hygiene products that require separate handling from ordinary recyclable and wet waste.";
+
+    bin =
+        "🟣 Designated Sanitary Waste Collection";
+
+    disposal = [
+
+        "Wrap used sanitary products securely.",
+
+        "Keep them separate from recyclable waste.",
+
+        "Place them in the designated sanitary-waste stream according to local instructions.",
+
+        "Follow your local waste collection guidance."
+
+    ];
+
+    environment =
+        "Separating sanitary waste helps reduce contamination and supports safer waste handling.";
+
+}
+
+
+
+/* =====================================
+   HAZARDOUS
+===================================== */
+
+else if (type === "hazardous") {
+
+    name =
+        "Hazardous / Special Waste";
+
+    category =
+        "Special-Care Waste";
+
+    description =
+        "This category can include materials that need special handling, such as certain chemicals, paints and other potentially harmful household materials.";
+
+    bin =
+        "⚠️ Special / Hazardous Waste Collection";
+
+    disposal = [
+
+        "Do not mix with normal household waste.",
+
+        "Keep the material in its original container when safe to do so.",
+
+        "Do not pour unknown chemicals into drains.",
+
+        "Contact an appropriate authorised collection facility for disposal guidance."
+
+    ];
+
+    environment =
+        "Separate handling helps prevent harmful substances from contaminating soil, water and other waste streams.";
+
+}
+
+
+
+/* =====================================
+   OTHER
+===================================== */
+
+else {
+
+    name =
+        "Other / Unclassified Waste";
+
+    category =
+        "Needs Further Identification";
+
+    description =
+        "This item does not clearly belong to the common categories in this application.";
+
+    bin =
+        "📋 Check Local Waste Collection Guidance";
+
+    disposal = [
+
+        "Keep the item separate until it is identified.",
+
+        "Do not mix unknown materials with wet waste.",
+
+        "Check your local waste-management instructions.",
+
+        "Use an appropriate collection facility when required."
+
+    ];
+
+    environment =
+        "Correct identification helps prevent recyclable and special-care materials from being mixed with ordinary waste.";
+
+}
+
+
+
+/* =====================================
+   SHOW INFORMATION
+===================================== */
+
+document.getElementById("wasteName")
+    .innerText = name;
+
+
+document.getElementById("category")
+    .innerText = category;
+
+
+document.getElementById("description")
+    .innerText = description;
+
+
+document.getElementById("bin")
+    .innerText = bin;
+
+
+document.getElementById("environment")
+    .innerText = environment;
+
+
+
+/* DISPOSAL LIST */
+
+const list =
+    document.getElementById("disposal");
+
+list.innerHTML = "";
+
+
+disposal.forEach(function(step) {
+
+    const li =
+        document.createElement("li");
+
+    li.innerText = step;
+
+    list.appendChild(li);
+
+});
+
+
+/* SHOW RESULT */
+
+document.getElementById("result")
+    .style.display = "block";
+
+
+document.getElementById("result")
+    .scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+
+/* =====================================
+   TRY ANOTHER
+===================================== */
+
+function tryAnother() {
+
+    document.getElementById("wastePhoto")
+        .value = "";
+
+    document.getElementById("preview")
+        .style.display = "none";
+
+    document.getElementById("typeSection")
+        .style.display = "none";
+
+    document.getElementById("identifyButton")
+        .style.display = "none";
+
+    document.getElementById("result")
+        .style.display = "none";
+
+    document.getElementById("wasteType")
+        .value = "";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+
+/* =====================================
+   REPORT WASTE
+===================================== */
+
+function reportWaste() {
+
+    window.location.href =
+        "report.html";
+
+}
+
+
+
+/* =====================================
+   HOME
+===================================== */
+
+function goHome() {
+
+    window.location.href =
+        "home.html";
+
+}
+
+</script>
+<script src="language.js"></script>
+
+
+</body>
+</html>

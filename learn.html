@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Learn - Eco Clean</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#d4fc79,#96e6a1,#c1fba4);
+    min-height:100vh;
+    padding:30px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:rgba(255,255,255,0.95);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align:center;
+    color:#1b5e20;
+    margin-bottom:20px;
+    font-size:40px;
+}
+
+.sprout{
+    font-size:50px;
+    text-align:center;
+    margin-bottom:10px;
+}
+
+/* SEARCH */
+
+.search-box{
+    display:flex;
+    gap:10px;
+    margin:25px 0;
+}
+
+.search-box input{
+    flex:1;
+    padding:15px;
+    border:2px solid #2e7d32;
+    border-radius:12px;
+    font-size:16px;
+    outline:none;
+}
+
+.search-box button{
+    background:#2e7d32;
+    color:white;
+    border:none;
+    padding:15px 25px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.search-box button:hover{
+    background:#1b5e20;
+}
+
+/* ANSWER */
+
+#answerBox{
+    display:none;
+    margin-bottom:25px;
+    padding:20px;
+    background:#e8f5e9;
+    border-left:6px solid #2e7d32;
+    border-radius:12px;
+}
+
+#answerBox h2{
+    color:#1b5e20;
+    margin-bottom:10px;
+}
+
+#answer{
+    line-height:1.7;
+    color:#333;
+}
+
+.section{
+    margin-bottom:25px;
+    padding:20px;
+    border-left:6px solid #2e7d32;
+    background:#f1fff1;
+    border-radius:12px;
+}
+
+h2{
+    color:#2e7d32;
+    margin-bottom:10px;
+}
+
+p{
+    line-height:1.7;
+    color:#333;
+}
+
+ul{
+    margin-left:25px;
+    margin-top:10px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.loading{
+    color:#2e7d32;
+    font-weight:bold;
+}
+
+@media(max-width:600px){
+
+    body{
+        padding:15px;
+    }
+
+    .container{
+        padding:20px;
+    }
+
+    h1{
+        font-size:30px;
+    }
+
+    .search-box{
+        flex-direction:column;
+    }
+
+    .search-box button{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="sprout">🌱</div>
+
+<h1>Learn About Waste Management</h1>
+
+<!-- REAL SEARCH -->
+<div class="search-box">
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍 Ask anything about waste management..."
+        onkeydown="handleEnter(event)"
+    >
+
+    <button onclick="searchQuestion()">
+        Search
+    </button>
+
+</div>
+
+<!-- SEARCH RESULT -->
+<div id="answerBox">
+
+    <h2>🤖 Answer</h2>
+
+    <p id="answer"></p>
+
+</div>
+
+
+<div class="section">
+
+<h2>🌿 What is Waste?</h2>
+
+<p>
+Waste is any material that is no longer useful and is discarded by people.
+Improper disposal of waste can cause pollution and harm both humans and nature.
+</p>
+
+</div>
+
+
+<div class="section">
+
+<h2>♻️ Types of Waste</h2>
+
+<ul>
+
+<li>
+<b>Biodegradable Waste</b> – Food scraps, leaves, paper, and other materials
+that decompose naturally.
+</li>
+
+<li>
+<b>Non-Biodegradable Waste</b> – Plastic, glass, metals, and materials
+that take a very long time to break down.
+</li>
+
+<li>
+<b>E-Waste</b> – Old computers, mobile phones, batteries, and electronic devices.
+</li>
+
+<li>
+<b>Hazardous Waste</b> – Chemicals, paints, medical waste, and toxic substances.
+</li>
+
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>🏥 How Waste Affects Human Health</h2>
+
+<ul>
+
+<li>Causes respiratory problems due to polluted air.</li>
+<li>Spreads diseases through contaminated water and surroundings.</li>
+<li>Attracts mosquitoes, flies, and harmful insects.</li>
+<li>Can cause skin infections and allergies.</li>
+<li>Pollutes food and drinking water sources.</li>
+
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>🌍 How Can We Reduce Waste?</h2>
+
+<ul>
+
+<li>Reduce the use of plastic products.</li>
+<li>Reuse items whenever possible.</li>
+<li>Recycle paper, glass, plastic, and metal.</li>
+<li>Segregate waste into wet and dry categories.</li>
+<li>Use reusable bags and water bottles.</li>
+<li>Compost biodegradable waste.</li>
+<li>Dispose of e-waste responsibly.</li>
+
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>🌱 Good Practices We Should Follow</h2>
+
+<ul>
+
+<li>Keep public places clean.</li>
+<li>Do not litter roads and streets.</li>
+<li>Use dustbins for waste disposal.</li>
+<li>Participate in community clean-up activities.</li>
+<li>Plant more trees and protect green spaces.</li>
+<li>Create awareness about waste management.</li>
+
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>🚀 How Our Eco-Clean App Helps</h2>
+
+<p>
+Our Eco-Clean application helps users identify and report waste,
+learn about proper waste segregation, find nearby waste facilities,
+and promote responsible waste management.
+</p>
+
+</div>
+
+</div>
+
+
+<script>
+
+function handleEnter(event){
+
+    if(event.key === "Enter"){
+        searchQuestion();
+    }
+
+}
+
+
+async function searchQuestion(){
+
+    const question =
+        document.getElementById("searchInput").value.trim();
+
+    const answerBox =
+        document.getElementById("answerBox");
+
+    const answer =
+        document.getElementById("answer");
+
+
+    if(question === ""){
+
+        alert("Please enter a question.");
+
+        return;
+    }
+
+
+    answerBox.style.display = "block";
+
+    answer.innerHTML =
+        '<span class="loading">🔎 Searching for real information...</span>';
+
+
+    try{
+
+        const response =
+            await fetch("http://localhost:3001/learn-search",{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+                    question:question
+                })
+
+            });
+
+
+        const data =
+            await response.json();
+
+
+        if(data.answer){
+
+            answer.innerText =
+                data.answer;
+
+        }
+        else{
+
+            answer.innerText =
+                "Sorry, no information was found.";
+
+        }
+
+    }
+    catch(error){
+
+        answer.innerText =
+            "Unable to connect to the search service. Please make sure the backend is running.";
+
+        console.error(error);
+
+    }
+
+}
+
+</script>
+<script src="language.js"></script>
+
+</body>
+</html>

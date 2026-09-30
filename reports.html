@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CleanCity - My Reports</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f8f4;
+            color: #222;
+        }
+
+
+        /* HEADER */
+
+        header {
+            background: #168a45;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back {
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        header h1 {
+            font-size: 22px;
+        }
+
+
+        /* MAIN */
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 25px auto;
+        }
+
+
+        /* INTRO */
+
+        .intro {
+            margin-bottom: 20px;
+        }
+
+        .intro h2 {
+            margin-bottom: 7px;
+        }
+
+        .intro p {
+            color: #666;
+            font-size: 14px;
+        }
+
+
+        /* REPORT CARD */
+
+        .report-card {
+            background: white;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+
+        /* PHOTO */
+
+        .report-photo {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+
+        /* REPORT ID */
+
+        .report-id {
+            color: #168a45;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+
+        /* TITLE */
+
+        .report-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+
+        /* INFORMATION */
+
+        .report-info {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+
+        /* STATUS */
+
+        .status {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .assigned{
+            background: #fff3cd;
+            color: #856404;
+        }
+        .rejected {
+    background: #f8d7da;
+    color: #842029;
+}
+
+        .progress {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .resolved {
+            background: #d9f7df;
+            color: #168a45;
+        }
+
+
+        /* NO REPORTS */
+
+        .no-reports {
+            background: white;
+            padding: 35px 20px;
+            border-radius: 15px;
+            text-align: center;
+            color: #666;
+        }
+
+        .no-reports-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+
+        /* BACK BUTTON */
+
+        .home-button {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 25px;
+            background: #168a45;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 92%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="back" onclick="goHome()">
+        ←
+    </div>
+
+    <h1>
+        📋 My Reports
+    </h1>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="intro">
+
+        <h2>
+            My Complaints
+        </h2>
+
+        <p>
+            Track the waste complaints you have submitted.
+        </p>
+
+    </div>
+
+
+    <!-- REPORTS WILL APPEAR HERE -->
+
+    <div id="reportsContainer"></div>
+
+
+    <button class="home-button"
+            onclick="goHome()">
+
+        🏠 Back to Home
+
+    </button>
+
+
+</div>
+
+
+<script>
+
+
+async function displayReports() {
+
+    const container =
+        document.getElementById("reportsContainer");
+
+    container.innerHTML = `
+        <div class="no-reports">
+            <div class="no-reports-icon">⏳</div>
+            <h3>Loading Reports...</h3>
+            <p style="margin-top:8px;">
+                Please wait while we fetch your reports.
+            </p>
+        </div>
+    `;
+
+
+    /* Get logged-in user */
+    const user =
+        JSON.parse(localStorage.getItem("cleanCityUser"));
+
+
+    if (!user || !user.email) {
+
+        container.innerHTML = `
+            <div class="no-reports">
+
+                <div class="no-reports-icon">
+                    🔐
+                </div>
+
+                <h3>
+                    Please Login
+                </h3>
+
+                <p style="margin-top:8px;">
+                    Please login to view your reports.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:3001/reports?email="
+                + encodeURIComponent(user.email)
+            );
+
+
+        const reports =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                reports.message ||
+                "Unable to fetch reports"
+            );
+
+        }
+
+
+        /* NO REPORTS */
+
+        if (reports.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="no-reports">
+
+                    <div class="no-reports-icon">
+                        📋
+                    </div>
+
+                    <h3>
+                        No Reports Yet
+                    </h3>
+
+                    <p style="margin-top:8px;">
+                        You have not submitted any waste complaints.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        /* CLEAR CONTAINER */
+
+        container.innerHTML = "";
+
+
+        /* SHOW REPORTS */
+
+        reports.forEach(function(report) {
+
+            let statusClass = "pending";
+
+let statusIcon = "🟡";
+
+
+if (report.status === "Assigned") {
+
+    statusClass = "assigned";
+
+    statusIcon = "🟠";
+
+}
+
+
+if (report.status === "In Progress") {
+
+    statusClass = "progress";
+
+    statusIcon = "🔵";
+
+}
+
+
+if (report.status === "Resolved") {
+
+    statusClass = "resolved";
+
+    statusIcon = "🟢";
+
+}
+if (report.status === "Rejected") {
+
+    statusClass = "rejected";
+
+    statusIcon = "🔴";
+
+}
+
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "report-card";
+
+
+            card.innerHTML = `
+
+                <div class="report-id">
+
+                    Report ID: ${report.report_id}
+
+                </div>
+
+
+                <div class="report-title">
+
+                    🚨 ${report.problem_type}
+
+                </div>
+
+
+                <div class="report-info">
+
+                    ♻️ <strong>Waste Type:</strong>
+                    ${report.waste_type}
+
+                    <br>
+
+                    📍 <strong>Location:</strong>
+                    ${report.latitude !== null
+                        ? report.latitude + ", " + report.longitude
+                        : "Location not available"}
+
+                    <br>
+
+                    📅 <strong>Date & Time:</strong>
+                    ${new Date(report.report_date).toLocaleString()}
+
+                    <br>
+
+                    📝 <strong>Description:</strong>
+                    ${report.description}
+
+                </div>
+
+
+                <span class="status ${statusClass}">
+
+                    ${statusIcon}
+                    ${report.status}
+
+                </span>
+
+            `;
+
+
+            container.appendChild(card);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Fetch reports error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="no-reports">
+
+                <div class="no-reports-icon">
+                    ⚠️
+                </div>
+
+                <h3>
+                    Unable to Load Reports
+                </h3>
+
+                <p style="margin-top:8px;">
+                    Please make sure the backend is running.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+/* HOME */
+
+function goHome() {
+
+    window.location.href = "home.html";
+
+}
+
+
+/* DISPLAY REPORTS */
+
+displayReports();
+
+</script>
+<script src="language.js"></script>
+
+
+</body>
+</html>

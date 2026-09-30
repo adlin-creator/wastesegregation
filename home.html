@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CleanCity - Waste Management</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f8f4;
+            color: #222;
+        }
+        /* WASTE COLLECTION BUTTONS */
+
+.collection-question {
+    margin-top: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.waste-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.waste-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #e8f5ec;
+    color: #168a45;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.waste-buttons button:hover {
+    background: #d5eedc;
+}
+
+.collection-message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #f3f8f4;
+    color: #444;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+        /* HEADER */
+
+        header {
+            background: #168a45;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 18px;
+            font-size: 22px;
+        }
+
+        .header-icons span {
+            cursor: pointer;
+        }
+
+        /* WELCOME */
+
+        .welcome {
+            padding: 25px 7% 10px;
+        }
+
+        .welcome h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .location {
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* REPORT BOX */
+
+        .report-box {
+            margin: 20px 7%;
+            background: #168a45;
+            color: white;
+            padding: 28px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+        }
+
+        .report-box h2 {
+            margin-bottom: 8px;
+        }
+
+        .report-box p {
+            margin-bottom: 18px;
+        }
+
+        .report-btn {
+            background: white;
+            color: #168a45;
+            border: none;
+            padding: 13px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .report-btn:hover {
+            background: #e8f5ec;
+        }
+
+        /* SECTIONS */
+
+        .section {
+            margin: 25px 7%;
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            font-size: 21px;
+        }
+
+        /* CARDS */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card .icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* COLLECTION */
+
+        .collection {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .collection strong {
+            color: #168a45;
+        }
+
+        .collection p {
+            margin-bottom: 7px;
+        }
+
+        /* REPORT STATUS */
+
+        .reports {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .report-status {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+        }
+
+        .report-status h3 {
+            color: #168a45;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        /* CLEANLINESS POINTS */
+
+.points-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.points-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.points-top p {
+    color: #666;
+    font-size: 14px;
+}
+
+.points-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #168a45;
+    margin-top: 5px;
+}
+
+.trophy {
+    font-size: 45px;
+}
+
+.level-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.level-info strong {
+    color: #168a45;
+    font-size: 17px;
+}
+
+.level-info span {
+    color: #666;
+    font-size: 14px;
+}
+
+.progress-container {
+    width: 100%;
+    height: 10px;
+    background: #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 60%;
+    height: 100%;
+    background: #168a45;
+    border-radius: 10px;
+}
+
+.next-level {
+    margin-top: 8px;
+    color: #777;
+    font-size: 12px;
+    text-align: right;
+}
+        /* TIP */
+
+        .tip {
+            background: #e4f4e9;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tip h3 {
+            margin-bottom: 8px;
+        }
+
+        .tip p {
+            line-height: 1.5;
+        }
+
+        /* BOTTOM NAVIGATION */
+
+        .bottom-nav {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 5px;
+        }
+
+        .bottom-nav button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .bottom-nav span {
+            display: block;
+            font-size: 21px;
+            margin-bottom: 3px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 15px 5%;
+            }
+
+            .welcome {
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+
+            .report-box,
+            .section {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .reports {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .welcome h1 {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .card h3 {
+                font-size: 16px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo">
+        🌱 CleanCity
+    </div>
+
+    <div class="header-icons">
+
+        <span onclick="showNotification()">
+            🔔
+        </span>
+
+        <span onclick="showProfile()">
+            👤
+        </span>
+
+    </div>
+
+</header>
+
+
+<!-- WELCOME -->
+
+<div class="welcome">
+
+    <h1 data-key="hello">
+        Hello! 👋
+    </h1>
+
+    <p data-key="welcome">
+        Let's keep our city clean together.
+    </p>
+
+    <p class="location">
+        📍 <span data-key="yourLocation">Your Location</span>
+    </p>
+
+</div>
+
+
+<!-- REPORT WASTE -->
+
+<div class="report-box">
+
+    <h2 data-lang="reportWaste">
+        📸 Report Waste
+    </h2>
+
+    <p data-key="reportDescription">
+        Found garbage? Report it quickly with a photo.
+    </p>
+
+    <button class="report-btn"
+            onclick="reportWaste()"
+            data-key="reportNow">
+
+        📷 REPORT NOW
+
+    </button>
+
+</div>
+
+
+<!-- WASTE SEGREGATION -->
+
+<div class="section">
+
+    <h2 data-lang="wasteSegregation">
+        ♻️ Waste Segregation
+    </h2>
+
+    <div class="cards">
+
+
+        <!-- IDENTIFY -->
+
+        <div class="card"
+             onclick="identifyWaste()">
+
+            <div class="icon">
+                🤖
+            </div>
+
+            <h3 data-lang="identifyWaste">
+                Identify Waste
+            </h3>
+
+            <p data-key="identifyDescription">
+                Use AI to identify the type of waste.
+            </p>
+
+        </div>
+
+
+        <!-- LEARN -->
+
+        <div class="card"
+             onclick="learnSegregation()">
+
+            <div class="icon">
+                📚
+            </div>
+
+            <h3 data-lang="learn">
+                Learn
+            </h3>
+
+            <p data-key="learnDescription">
+                Learn how to separate waste correctly.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- NEARBY SERVICES -->
+
+<div class="section">
+
+    <h2 data-lang="nearbyServices">
+        📍 Nearby Services
+    </h2>
+
+    <div class="cards">
+
+
+        <!-- DUSTBINS -->
+
+        <div class="card"
+             onclick="openDustbins()">
+
+            <div class="icon">
+                🗑️
+            </div>
+
+            <h3 data-lang="nearbyDustbins">
+                Nearby Dustbins
+            </h3>
+
+            <p data-key="dustbinDescription">
+                Find dustbins available near your location.
+            </p>
+
+        </div>
+
+
+        <!-- COLLECTION CENTRES -->
+
+        <div class="card"
+             onclick="openRecycleCentres()">
+
+            <div class="icon">
+                ♻️
+            </div>
+
+            <h3 data-lang="collectionCentres">
+                Waste Collection Centres
+            </h3>
+
+            <p data-key="centreDescription">
+                Find nearby waste collection and recycling centres.
+            </p>
+
+        </div>
+
+
+        <!-- TRACK VEHICLE -->
+
+        <div class="card"
+             onclick="trackVehicle()">
+
+            <div class="icon">
+                🚛
+            </div>
+
+            <h3 data-lang="trackVehicle">
+                Track Collection Vehicle
+            </h3>
+
+            <p data-key="trackDescription">
+                Track the waste collection vehicle near your location.
+            </p>
+
+        </div>
+
+
+        <!-- LANGUAGE -->
+
+        <div class="card"
+             onclick="openLanguage()">
+
+            <div class="icon">
+                🌐
+            </div>
+
+            <h3 data-lang="language">
+                Language
+            </h3>
+
+            <p data-key="languageDescription">
+                Select your preferred language.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+      🗓️ Next Collection
+        </p>
+        
+<!-- COLLECTION SCHEDULE -->
+
+<div class="section">
+
+    <h2 data-key="wasteCollection">
+        🚛 Waste Collection
+    </h2>
+
+    <div class="collection">
+
+        <p data-key="nextCollection">
+            🗓️ Next Collection
+        </p>
+
+        <h3 id="nextCollectionTime">
+    Loading collection schedule...
+</h3>
+
+        <p class="collection-question">
+            Select Waste Type:
+        </p>
+
+        <div class="waste-buttons">
+
+            <button onclick="showWetWaste()">
+                🟢 <span data-key="wetWaste">Wet Waste</span>
+            </button>
+
+            <button onclick="showDryWaste()">
+                🔵 <span data-key="dryWaste">Dry Waste</span>
+            </button>
+
+        </div>
+
+        <div id="collectionMessage" class="collection-message">
+            Select a waste type to see collection details.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MY REPORTS -->
+
+<div class="section">
+
+    <h2 data-key="myReports">
+        📋 My Reports
+    </h2>
+
+    <div class="reports" onclick="showReports()" style="cursor:pointer;">
+
+        <div class="report-status">
+            <h3>2</h3>
+            <p data-key="pending">Pending</p>
+        </div>
+
+        <div class="report-status">
+            <h3>1</h3>
+            <p data-key="inProgress">In Progress</p>
+        </div>
+
+        <div class="report-status">
+            <h3>3</h3>
+            <p data-key="resolved">Resolved</p>
+        </div>
+
+    </div>
+
+    <button onclick="showReports()" 
+            style="
+            margin-top:15px;
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#168a45;
+            color:white;
+            font-size:15px;
+            font-weight:bold;
+            cursor:pointer;">
+        📋 View My Reports
+    </button>
+
+</div>
+
+</div>
+<!-- CLEANLINESS POINTS -->
+
+<div class="section">
+
+    <h2 data-key="cleanlinessPoints">
+        ⭐ My Cleanliness Points
+    </h2>
+
+    <div class="points-card">
+
+        <div class="points-top">
+
+            <div>
+
+                <p data-key="yourPoints">
+                    Your Points
+                </p>
+
+                <div class="points-number" id="points">
+                    0
+                </div>
+
+            </div>
+
+            <div class="trophy">
+                🏆
+            </div>
+
+        </div>
+
+
+        <div class="level-info">
+
+            <strong id="level">
+                Level 2
+            </strong>
+
+            <span id="levelTitle">
+                Clean City Helper
+            </span>
+
+        </div>
+
+
+        <div class="progress-container">
+
+            <div class="progress-bar"
+                 id="progressBar">
+            </div>
+
+        </div>
+
+
+        <p class="next-level">
+            <span id="pointsLeft">80</span>
+            points needed for Level 3
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- CLEAN CITY TIP -->
+
+<div class="section">
+
+    <h2 data-key="cleanCityTip">
+        🌱 Clean City Tip
+    </h2>
+
+    <div class="tip">
+
+        <h3 data-key="separateWaste">
+            ♻️ Separate Your Waste
+        </h3>
+
+        <p data-key="separateDescription">
+            Keep wet waste and dry waste separately
+            to make recycling and composting easier.
+        </p>
+
+    </div>
+
+</div>
+
+
+
+
+<!-- BOTTOM NAVIGATION -->
+
+<div class="bottom-nav">
+
+    <!-- HOME -->
+    <button onclick="goHome()">
+
+        <span>🏠</span>
+
+        <span data-key="home">
+            Home
+        </span>
+
+    </button>
+
+
+    <!-- MAP -->
+    <button onclick="openMap()">
+
+        <span>🗺️</span>
+
+        <span data-key="map">
+            Map
+        </span>
+
+    </button>
+
+
+    <!-- REPORTS -->
+    <button onclick="showReports()">
+
+        <span>📋</span>
+
+        <span data-key="reports">
+            Reports
+        </span>
+
+    </button>
+
+
+    <!-- PROFILE -->
+    <button onclick="showProfile()">
+
+        <span>👤</span>
+
+        <span data-key="profile">
+            Profile
+        </span>
+
+    </button>
+
+</div>
+
+
+
+<script>
+    async function showWetWaste() {
+
+    const message =
+        document.getElementById("collectionMessage");
+
+    message.innerHTML =
+        "🟢 <b>Wet Waste Collection</b><br>" +
+        "Loading collection details...";
+
+    await loadCollectionSchedule("Wet Waste");
+}
+
+
+async function showDryWaste() {
+
+    const message =
+        document.getElementById("collectionMessage");
+
+    message.innerHTML =
+        "🔵 <b>Dry Waste Collection</b><br>" +
+        "Loading collection details...";
+
+    await loadCollectionSchedule("Dry Waste");
+}
+async function loadNextCollectionTime() {
+
+    const heading =
+        document.getElementById("nextCollectionTime");
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/collection-schedule?ward=Ward%2012"
+        );
+
+        const data = await response.json();
+
+        heading.innerHTML =
+            "🚛 Collection Time - <strong>" +
+            data.schedule.collection_time +
+            "</strong>";
+
+    } catch (error) {
+
+        console.error("Collection time error:", error);
+
+        heading.textContent =
+            "Collection schedule unavailable";
+    }
+}
+
+/* =====================================================
+   TRANSLATIONS
+   ===================================================== */
+
+const translations = {
+
+
+/* ================= ENGLISH ================= */
+
+en: {
+
+hello: "Hello! 👋",
+welcome: "Let's keep our city clean together.",
+yourLocation: "Your Location",
+
+reportWaste: "📸 Report Waste",
+reportDescription: "Found garbage? Report it quickly with a photo.",
+reportNow: "📷 REPORT NOW",
+
+wasteSegregation: "♻️ Waste Segregation",
+
+identifyWaste: "Identify Waste",
+identifyDescription: "Use AI to identify the type of waste.",
+
+learn: "Learn",
+learnDescription: "Learn how to separate waste correctly.",
+
+nearbyServices: "📍 Nearby Services",
+
+nearbyDustbins: "Nearby Dustbins",
+dustbinDescription: "Find dustbins available near your location.",
+
+collectionCentres: "Waste Collection Centres",
+centreDescription: "Find nearby waste collection and recycling centres.",
+
+trackVehicle: "Track Collection Vehicle",
+trackDescription: "Track the waste collection vehicle near your location.",
+
+language: "Language",
+languageDescription: "Select your preferred language.",
+
+wasteCollection: "🚛 Waste Collection",
+nextCollection: "🗓️ Next Collection",
+tomorrow: "Tomorrow",
+
+wetWaste: "Wet Waste",
+dryWaste: "Dry Waste",
+
+myReports: "📋 My Reports",
+pending: "Pending",
+inProgress: "In Progress",
+resolved: "Resolved",
+
+cleanlinessPoints: "⭐ My Cleanliness Points",
+yourPoints: "Your Points",
+
+cleanCityTip: "🌱 Clean City Tip",
+separateWaste: "♻️ Separate Your Waste",
+separateDescription: "Keep wet waste and dry waste separately to make recycling and composting easier.",
+
+home: "Home",
+report: "Report",
+reports: "Reports",
+profile: "Profile"
+
+},
+
+
+/* ================= TAMIL ================= */
+
+ta: {
+
+hello: "வணக்கம்! 👋",
+welcome: "நம் நகரத்தை ஒன்றாக சுத்தமாக வைத்திருப்போம்.",
+yourLocation: "உங்கள் இருப்பிடம்",
+
+reportWaste: "📸 கழிவுகளை புகாரளிக்கவும்",
+reportDescription: "குப்பையை கண்டீர்களா? புகைப்படத்துடன் விரைவாக புகாரளிக்கவும்.",
+reportNow: "📷 இப்போது புகாரளிக்கவும்",
+
+wasteSegregation: "♻️ கழிவு பிரித்தல்",
+
+identifyWaste: "கழிவை அடையாளம் காண்க",
+identifyDescription: "AI மூலம் கழிவின் வகையை கண்டறியவும்.",
+
+learn: "கற்றுக்கொள்ளுங்கள்",
+learnDescription: "கழிவுகளை சரியாக பிரிப்பது எப்படி என்பதை கற்றுக்கொள்ளுங்கள்.",
+
+nearbyServices: "📍 அருகிலுள்ள சேவைகள்",
+
+nearbyDustbins: "அருகிலுள்ள குப்பைத்தொட்டிகள்",
+dustbinDescription: "உங்கள் இருப்பிடத்திற்கு அருகிலுள்ள குப்பைத்தொட்டிகளை கண்டறியவும்.",
+
+collectionCentres: "கழிவு சேகரிப்பு மையங்கள்",
+centreDescription: "அருகிலுள்ள கழிவு சேகரிப்பு மற்றும் மறுசுழற்சி மையங்களை கண்டறியவும்.",
+
+trackVehicle: "சேகரிப்பு வாகனத்தை கண்காணிக்கவும்",
+trackDescription: "உங்கள் இருப்பிடத்திற்கு அருகிலுள்ள கழிவு சேகரிப்பு வாகனத்தை கண்காணிக்கவும்.",
+
+language: "மொழி",
+languageDescription: "உங்களுக்கு விருப்பமான மொழியை தேர்ந்தெடுக்கவும்.",
+
+wasteCollection: "🚛 கழிவு சேகரிப்பு",
+nextCollection: "🗓️ அடுத்த சேகரிப்பு",
+tomorrow: "நாளை",
+
+wetWaste: "ஈரக் கழிவு",
+dryWaste: "உலர் கழிவு",
+
+myReports: "📋 எனது புகார்கள்",
+pending: "நிலுவையில்",
+inProgress: "செயல்பாட்டில்",
+resolved: "தீர்க்கப்பட்டது",
+
+cleanlinessPoints: "⭐ எனது தூய்மை புள்ளிகள்",
+yourPoints: "உங்கள் புள்ளிகள்",
+
+cleanCityTip: "🌱 தூய்மையான நகர குறிப்பு",
+separateWaste: "♻️ உங்கள் கழிவுகளை பிரிக்கவும்",
+separateDescription: "மறுசுழற்சி மற்றும் உரமாக்கலை எளிதாக்க ஈரக் கழிவையும் உலர் கழிவையும் தனித்தனியாக வைக்கவும்.",
+
+home: "முகப்பு",
+report: "புகார்",
+reports: "புகார்கள்",
+profile: "சுயவிவரம்"
+
+},
+
+
+/* ================= HINDI ================= */
+
+hi: {
+
+hello: "नमस्ते! 👋",
+welcome: "आइए मिलकर अपने शहर को स्वच्छ रखें।",
+yourLocation: "आपका स्थान",
+
+reportWaste: "📸 कचरे की शिकायत करें",
+reportDescription: "कचरा मिला? फोटो के साथ तुरंत शिकायत करें।",
+reportNow: "📷 अभी शिकायत करें",
+
+wasteSegregation: "♻️ कचरा अलग करना",
+
+identifyWaste: "कचरे की पहचान करें",
+identifyDescription: "कचरे के प्रकार की पहचान करने के लिए AI का उपयोग करें।",
+
+learn: "सीखें",
+learnDescription: "कचरे को सही तरीके से अलग करना सीखें।",
+
+nearbyServices: "📍 आस-पास की सेवाएं",
+
+nearbyDustbins: "आस-पास के कूड़ेदान",
+dustbinDescription: "अपने स्थान के पास उपलब्ध कूड़ेदान खोजें।",
+
+collectionCentres: "कचरा संग्रह केंद्र",
+centreDescription: "पास के कचरा संग्रह और रीसाइक्लिंग केंद्र खोजें।",
+
+trackVehicle: "कचरा संग्रह वाहन ट्रैक करें",
+trackDescription: "अपने स्थान के पास कचरा संग्रह वाहन को ट्रैक करें।",
+
+language: "भाषा",
+languageDescription: "अपनी पसंदीदा भाषा चुनें।",
+
+wasteCollection: "🚛 कचरा संग्रह",
+nextCollection: "🗓️ अगला संग्रह",
+tomorrow: "कल",
+
+wetWaste: "गीला कचरा",
+dryWaste: "सूखा कचरा",
+
+myReports: "📋 मेरी शिकायतें",
+pending: "लंबित",
+inProgress: "प्रगति में",
+resolved: "हल किया गया",
+
+cleanlinessPoints: "⭐ मेरे स्वच्छता अंक",
+yourPoints: "आपके अंक",
+
+cleanCityTip: "🌱 स्वच्छ शहर सुझाव",
+separateWaste: "♻️ अपना कचरा अलग करें",
+separateDescription: "रीसाइक्लिंग और खाद बनाने को आसान बनाने के लिए गीले और सूखे कचरे को अलग रखें।",
+
+home: "होम",
+report: "शिकायत",
+reports: "शिकायतें",
+profile: "प्रोफ़ाइल"
+
+},
+
+
+/* ================= TELUGU ================= */
+
+te: {
+
+hello: "నమస్కారం! 👋",
+welcome: "మన నగరాన్ని కలిసి శుభ్రంగా ఉంచుదాం.",
+yourLocation: "మీ స్థానం",
+
+reportWaste: "📸 చెత్తను నివేదించండి",
+reportDescription: "చెత్త కనిపించిందా? ఫోటోతో త్వరగా నివేదించండి.",
+reportNow: "📷 ఇప్పుడే నివేదించండి",
+
+wasteSegregation: "♻️ చెత్త విభజన",
+
+identifyWaste: "చెత్తను గుర్తించండి",
+identifyDescription: "చెత్త రకాన్ని గుర్తించడానికి AI ఉపయోగించండి.",
+
+learn: "నేర్చుకోండి",
+learnDescription: "చెత్తను సరిగ్గా ఎలా వేరు చేయాలో నేర్చుకోండి.",
+
+nearbyServices: "📍 సమీప సేవలు",
+
+nearbyDustbins: "సమీప చెత్త బుట్టలు",
+dustbinDescription: "మీ స్థానానికి సమీపంలో ఉన్న చెత్త బుట్టలను కనుగొనండి.",
+
+collectionCentres: "చెత్త సేకరణ కేంద్రాలు",
+centreDescription: "సమీపంలోని చెత్త సేకరణ మరియు రీసైక్లింగ్ కేంద్రాలను కనుగొనండి.",
+
+trackVehicle: "సేకరణ వాహనాన్ని ట్రాక్ చేయండి",
+trackDescription: "మీ స్థానానికి సమీపంలోని చెత్త సేకరణ వాహనాన్ని ట్రాక్ చేయండి.",
+
+language: "భాష",
+languageDescription: "మీకు ఇష్టమైన భాషను ఎంచుకోండి.",
+
+wasteCollection: "🚛 చెత్త సేకరణ",
+nextCollection: "🗓️ తదుపరి సేకరణ",
+tomorrow: "రేపు",
+
+wetWaste: "తడి చెత్త",
+dryWaste: "పొడి చెత్త",
+
+myReports: "📋 నా నివేదికలు",
+pending: "పెండింగ్",
+inProgress: "పురోగతిలో",
+resolved: "పరిష్కరించబడింది",
+
+cleanlinessPoints: "⭐ నా శుభ్రత పాయింట్లు",
+yourPoints: "మీ పాయింట్లు",
+
+cleanCityTip: "🌱 శుభ్రమైన నగర సూచన",
+separateWaste: "♻️ మీ చెత్తను వేరు చేయండి",
+separateDescription: "రీసైక్లింగ్ మరియు కంపోస్టింగ్ సులభం కావడానికి తడి మరియు పొడి చెత్తను వేరుగా ఉంచండి.",
+
+home: "హోమ్",
+report: "నివేదిక",
+reports: "నివేదికలు",
+profile: "ప్రొఫైల్"
+
+},
+
+
+/* ================= KANNADA ================= */
+
+kn: {
+
+hello: "ನಮಸ್ಕಾರ! 👋",
+welcome: "ನಮ್ಮ ನಗರವನ್ನು ಒಟ್ಟಾಗಿ ಸ್ವಚ್ಛವಾಗಿಡೋಣ.",
+yourLocation: "ನಿಮ್ಮ ಸ್ಥಳ",
+
+reportWaste: "📸 ತ್ಯಾಜ್ಯವನ್ನು ವರದಿ ಮಾಡಿ",
+reportDescription: "ಕಸ ಕಂಡಿದ್ದೀರಾ? ಫೋಟೋದೊಂದಿಗೆ ತ್ವರಿತವಾಗಿ ವರದಿ ಮಾಡಿ.",
+reportNow: "📷 ಈಗ ವರದಿ ಮಾಡಿ",
+
+wasteSegregation: "♻️ ತ್ಯಾಜ್ಯ ವಿಂಗಡಣೆ",
+
+identifyWaste: "ತ್ಯಾಜ್ಯವನ್ನು ಗುರುತಿಸಿ",
+identifyDescription: "ತ್ಯಾಜ್ಯದ ಪ್ರಕಾರವನ್ನು ಗುರುತಿಸಲು AI ಬಳಸಿ.",
+
+learn: "ಕಲಿಯಿರಿ",
+learnDescription: "ತ್ಯಾಜ್ಯವನ್ನು ಸರಿಯಾಗಿ ಬೇರ್ಪಡಿಸುವುದು ಹೇಗೆ ಎಂದು ಕಲಿಯಿರಿ.",
+
+nearbyServices: "📍 ಹತ್ತಿರದ ಸೇವೆಗಳು",
+
+nearbyDustbins: "ಹತ್ತಿರದ ಕಸದ ಬುಟ್ಟಿಗಳು",
+dustbinDescription: "ನಿಮ್ಮ ಸ್ಥಳದ ಬಳಿ ಇರುವ ಕಸದ ಬುಟ್ಟಿಗಳನ್ನು ಹುಡುಕಿ.",
+
+collectionCentres: "ತ್ಯಾಜ್ಯ ಸಂಗ್ರಹ ಕೇಂದ್ರಗಳು",
+centreDescription: "ಹತ್ತಿರದ ತ್ಯಾಜ್ಯ ಸಂಗ್ರಹ ಮತ್ತು ಮರುಬಳಕೆ ಕೇಂದ್ರಗಳನ್ನು ಹುಡುಕಿ.",
+
+trackVehicle: "ಸಂಗ್ರಹ ವಾಹನವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ",
+trackDescription: "ನಿಮ್ಮ ಸ್ಥಳದ ಬಳಿ ಇರುವ ತ್ಯಾಜ್ಯ ಸಂಗ್ರಹ ವಾಹನವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ.",
+
+language: "ಭಾಷೆ",
+languageDescription: "ನಿಮ್ಮ ಆದ್ಯತೆಯ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+
+wasteCollection: "🚛 ತ್ಯಾಜ್ಯ ಸಂಗ್ರಹ",
+nextCollection: "🗓️ ಮುಂದಿನ ಸಂಗ್ರಹ",
+tomorrow: "ನಾಳೆ",
+
+wetWaste: "ಒದ್ದೆ ತ್ಯಾಜ್ಯ",
+dryWaste: "ಒಣ ತ್ಯಾಜ್ಯ",
+
+myReports: "📋 ನನ್ನ ವರದಿಗಳು",
+pending: "ಬಾಕಿ",
+inProgress: "ಪ್ರಗತಿಯಲ್ಲಿದೆ",
+resolved: "ಪರಿಹರಿಸಲಾಗಿದೆ",
+
+cleanlinessPoints: "⭐ ನನ್ನ ಸ್ವಚ್ಛತಾ ಅಂಕಗಳು",
+yourPoints: "ನಿಮ್ಮ ಅಂಕಗಳು",
+
+cleanCityTip: "🌱 ಸ್ವಚ್ಛ ನಗರ ಸಲಹೆ",
+separateWaste: "♻️ ನಿಮ್ಮ ತ್ಯಾಜ್ಯವನ್ನು ಬೇರ್ಪಡಿಸಿ",
+separateDescription: "ಮರುಬಳಕೆ ಮತ್ತು ಕಾಂಪೋಸ್ಟಿಂಗ್ ಸುಲಭವಾಗಲು ಒದ್ದೆ ಮತ್ತು ಒಣ ತ್ಯಾಜ್ಯವನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ಇರಿಸಿ.",
+
+home: "ಮುಖಪುಟ",
+report: "ವರದಿ",
+reports: "ವರದಿಗಳು",
+profile: "ಪ್ರೊಫೈಲ್"
+
+},
+
+
+/* ================= MALAYALAM ================= */
+
+ml: {
+
+hello: "നമസ്കാരം! 👋",
+welcome: "നമുക്ക് ഒരുമിച്ച് നമ്മുടെ നഗരം വൃത്തിയായി സൂക്ഷിക്കാം.",
+yourLocation: "നിങ്ങളുടെ സ്ഥാനം",
+
+reportWaste: "📸 മാലിന്യം റിപ്പോർട്ട് ചെയ്യുക",
+reportDescription: "മാലിന്യം കണ്ടോ? ഫോട്ടോയോടൊപ്പം വേഗത്തിൽ റിപ്പോർട്ട് ചെയ്യുക.",
+reportNow: "📷 ഇപ്പോൾ റിപ്പോർട്ട് ചെയ്യുക",
+
+wasteSegregation: "♻️ മാലിന്യ വേർതിരിക്കൽ",
+
+identifyWaste: "മാലിന്യം തിരിച്ചറിയുക",
+identifyDescription: "മാലിന്യത്തിന്റെ തരം തിരിച്ചറിയാൻ AI ഉപയോഗിക്കുക.",
+
+learn: "പഠിക്കുക",
+learnDescription: "മാലിന്യം ശരിയായി വേർതിരിക്കുന്നത് എങ്ങനെയെന്ന് പഠിക്കുക.",
+
+nearbyServices: "📍 സമീപ സേവനങ്ങൾ",
+
+nearbyDustbins: "സമീപത്തെ മാലിന്യപ്പെട്ടികൾ",
+dustbinDescription: "നിങ്ങളുടെ സ്ഥലത്തിന് സമീപമുള്ള മാലിന്യപ്പെട്ടികൾ കണ്ടെത്തുക.",
+
+collectionCentres: "മാലിന്യ ശേഖരണ കേന്ദ്രങ്ങൾ",
+centreDescription: "സമീപത്തെ മാലിന്യ ശേഖരണവും റീസൈക്ലിംഗ് കേന്ദ്രങ്ങളും കണ്ടെത്തുക.",
+
+trackVehicle: "ശേഖരണ വാഹനം ട്രാക്ക് ചെയ്യുക",
+trackDescription: "നിങ്ങളുടെ സ്ഥലത്തിന് സമീപമുള്ള മാലിന്യ ശേഖരണ വാഹനം ട്രാക്ക് ചെയ്യുക.",
+
+language: "ഭാഷ",
+languageDescription: "നിങ്ങളുടെ ഇഷ്ടപ്പെട്ട ഭാഷ തിരഞ്ഞെടുക്കുക.",
+
+wasteCollection: "🚛 മാലിന്യ ശേഖരണം",
+nextCollection: "🗓️ അടുത്ത ശേഖരണം",
+tomorrow: "നാളെ",
+
+wetWaste: "നനഞ്ഞ മാലിന്യം",
+dryWaste: "ഉണങ്ങിയ മാലിന്യം",
+
+myReports: "📋 എന്റെ റിപ്പോർട്ടുകൾ",
+pending: "തീർപ്പാക്കാത്തത്",
+inProgress: "പുരോഗതിയിൽ",
+resolved: "പരിഹരിച്ചു",
+
+cleanlinessPoints: "⭐ എന്റെ ശുചിത്വ പോയിന്റുകൾ",
+yourPoints: "നിങ്ങളുടെ പോയിന്റുകൾ",
+
+cleanCityTip: "🌱 ശുചിത്വ നഗര ടിപ്പ്",
+separateWaste: "♻️ നിങ്ങളുടെ മാലിന്യം വേർതിരിക്കുക",
+separateDescription: "റീസൈക്ലിംഗും കമ്പോസ്റ്റിംഗും എളുപ്പമാക്കാൻ നനഞ്ഞതും ഉണങ്ങിയതുമായ മാലിന്യങ്ങൾ പ്രത്യേകം സൂക്ഷിക്കുക.",
+
+home: "ഹോം",
+report: "റിപ്പോർട്ട്",
+reports: "റിപ്പോർട്ടുകൾ",
+profile: "പ്രൊഫൈൽ"
+
+},
+
+
+/* ================= MARATHI ================= */
+
+mr: {
+
+hello: "नमस्कार! 👋",
+welcome: "चला, आपले शहर एकत्र स्वच्छ ठेवूया.",
+yourLocation: "तुमचे स्थान",
+
+reportWaste: "📸 कचऱ्याची तक्रार करा",
+reportDescription: "कचरा दिसला? फोटोसह त्वरित तक्रार करा.",
+reportNow: "📷 आता तक्रार करा",
+
+wasteSegregation: "♻️ कचरा वर्गीकरण",
+
+identifyWaste: "कचरा ओळखा",
+identifyDescription: "कचऱ्याचा प्रकार ओळखण्यासाठी AI वापरा.",
+
+learn: "शिका",
+learnDescription: "कचरा योग्य प्रकारे वेगळा कसा करायचा ते शिका.",
+
+nearbyServices: "📍 जवळच्या सेवा",
+
+nearbyDustbins: "जवळचे कचरापेटी",
+dustbinDescription: "तुमच्या स्थानाजवळ उपलब्ध कचरापेट्या शोधा.",
+
+collectionCentres: "कचरा संकलन केंद्रे",
+centreDescription: "जवळील कचरा संकलन आणि पुनर्वापर केंद्रे शोधा.",
+
+trackVehicle: "कचरा संकलन वाहनाचा मागोवा घ्या",
+trackDescription: "तुमच्या स्थानाजवळील कचरा संकलन वाहनाचा मागोवा घ्या.",
+
+language: "भाषा",
+languageDescription: "तुमची आवडती भाषा निवडा.",
+
+wasteCollection: "🚛 कचरा संकलन",
+nextCollection: "🗓️ पुढील संकलन",
+tomorrow: "उद्या",
+
+wetWaste: "ओला कचरा",
+dryWaste: "सुका कचरा",
+
+myReports: "📋 माझ्या तक्रारी",
+pending: "प्रलंबित",
+inProgress: "प्रगतीपथावर",
+resolved: "निराकरण झाले",
+
+cleanlinessPoints: "⭐ माझे स्वच्छता गुण",
+yourPoints: "तुमचे गुण",
+
+cleanCityTip: "🌱 स्वच्छ शहर टिप",
+separateWaste: "♻️ तुमचा कचरा वेगळा करा",
+separateDescription: "पुनर्वापर आणि कंपोस्टिंग सोपे करण्यासाठी ओला आणि सुका कचरा वेगळा ठेवा.",
+
+home: "मुख्यपृष्ठ",
+report: "तक्रार",
+reports: "तक्रारी",
+profile: "प्रोफाइल"
+
+},
+
+
+/* ================= BENGALI ================= */
+
+bn: {
+
+hello: "নমস্কার! 👋",
+welcome: "চলুন একসাথে আমাদের শহর পরিষ্কার রাখি।",
+yourLocation: "আপনার অবস্থান",
+
+reportWaste: "📸 বর্জ্য রিপোর্ট করুন",
+reportDescription: "আবর্জনা দেখেছেন? ছবি সহ দ্রুত রিপোর্ট করুন।",
+reportNow: "📷 এখনই রিপোর্ট করুন",
+
+wasteSegregation: "♻️ বর্জ্য পৃথকীকরণ",
+
+identifyWaste: "বর্জ্য শনাক্ত করুন",
+identifyDescription: "বর্জ্যের ধরন শনাক্ত করতে AI ব্যবহার করুন।",
+
+learn: "শিখুন",
+learnDescription: "কীভাবে সঠিকভাবে বর্জ্য আলাদা করতে হয় তা শিখুন।",
+
+nearbyServices: "📍 কাছাকাছি পরিষেবা",
+
+nearbyDustbins: "কাছাকাছি ডাস্টবিন",
+dustbinDescription: "আপনার অবস্থানের কাছাকাছি ডাস্টবিন খুঁজুন।",
+
+collectionCentres: "বর্জ্য সংগ্রহ কেন্দ্র",
+centreDescription: "কাছাকাছি বর্জ্য সংগ্রহ এবং পুনর্ব্যবহার কেন্দ্র খুঁজুন।",
+
+trackVehicle: "সংগ্রহের গাড়ি ট্র্যাক করুন",
+trackDescription: "আপনার অবস্থানের কাছাকাছি বর্জ্য সংগ্রহের গাড়ি ট্র্যাক করুন।",
+
+language: "ভাষা",
+languageDescription: "আপনার পছন্দের ভাষা নির্বাচন করুন।",
+
+wasteCollection: "🚛 বর্জ্য সংগ্রহ",
+nextCollection: "🗓️ পরবর্তী সংগ্রহ",
+tomorrow: "আগামীকাল",
+
+wetWaste: "ভেজা বর্জ্য",
+dryWaste: "শুকনো বর্জ্য",
+
+myReports: "📋 আমার রিপোর্ট",
+pending: "অপেক্ষমাণ",
+inProgress: "চলমান",
+resolved: "সমাধান হয়েছে",
+
+cleanlinessPoints: "⭐ আমার পরিচ্ছন্নতা পয়েন্ট",
+yourPoints: "আপনার পয়েন্ট",
+
+cleanCityTip: "🌱 পরিচ্ছন্ন শহরের টিপ",
+separateWaste: "♻️ আপনার বর্জ্য আলাদা করুন",
+separateDescription: "পুনর্ব্যবহার এবং কম্পোস্টিং সহজ করতে ভেজা ও শুকনো বর্জ্য আলাদা রাখুন।",
+
+home: "হোম",
+report: "রিপোর্ট",
+reports: "রিপোর্টসমূহ",
+profile: "প্রোফাইল"
+
+},
+
+
+/* ================= GUJARATI ================= */
+
+gu: {
+
+hello: "નમસ્તે! 👋",
+welcome: "ચાલો સાથે મળીને આપણું શહેર સ્વચ્છ રાખીએ.",
+yourLocation: "તમારું સ્થાન",
+
+reportWaste: "📸 કચરાની ફરિયાદ કરો",
+reportDescription: "કચરો મળ્યો? ફોટા સાથે તરત ફરિયાદ કરો.",
+reportNow: "📷 હમણાં ફરિયાદ કરો",
+
+wasteSegregation: "♻️ કચરાનું વિભાજન",
+
+identifyWaste: "કચરો ઓળખો",
+identifyDescription: "કચરાનો પ્રકાર ઓળખવા માટે AI નો ઉપયોગ કરો.",
+
+learn: "શીખો",
+learnDescription: "કચરાને યોગ્ય રીતે અલગ કેવી રીતે કરવો તે શીખો.",
+
+nearbyServices: "📍 નજીકની સેવાઓ",
+
+nearbyDustbins: "નજીકના કચરાપેટી",
+dustbinDescription: "તમારા સ્થાનની નજીકની કચરાપેટીઓ શોધો.",
+
+collectionCentres: "કચરો સંગ્રહ કેન્દ્રો",
+centreDescription: "નજીકના કચરા સંગ્રહ અને રિસાયક્લિંગ કેન્દ્રો શોધો.",
+
+trackVehicle: "કચરા સંગ્રહ વાહન ટ્રૅક કરો",
+trackDescription: "તમારા સ્થાનની નજીકના કચરા સંગ્રહ વાહનને ટ્રૅક કરો.",
+
+language: "ભાષા",
+languageDescription: "તમારી પસંદગીની ભાષા પસંદ કરો.",
+
+wasteCollection: "🚛 કચરો સંગ્રહ",
+nextCollection: "🗓️ આગામી સંગ્રહ",
+tomorrow: "આવતીકાલે",
+
+wetWaste: "ભીનો કચરો",
+dryWaste: "સૂકો કચરો",
+
+myReports: "📋 मेरा रिपोर्टहरू",
+pending: "पेन्डिङ",
+inProgress: "प्रगतिमा",
+resolved: "समाधान भयो",
+
+cleanlinessPoints: "⭐ मेरा सरसफाइ अंक",
+yourPoints: "तपाईंका अंक",
+
+cleanCityTip: "🌱 सफा शहर सुझाव",
+separateWaste: "♻️ आफ्नो फोहोर अलग गर्नुहोस्",
+separateDescription: "रिसाइकल र कम्पोस्टिङ सजिलो बनाउन भिजेको र सुक्खा फोहोर अलग राख्नुहोस्।",
+
+home: "गृहपृष्ठ",
+report: "रिपोर्ट",
+reports: "रिपोर्टहरू",
+profile: "प्रोफाइल"
+
+},
+
+
+/* ================= KASHMIRI ================= */
+
+ks: {
+
+hello: "سلام! 👋",
+welcome: "آؤ مل کر اپنے شہر کو صاف رکھیں۔",
+yourLocation: "تُہند جٲے",
+
+reportWaste: "📸 کچرا رپورٹ کریو",
+reportDescription: "کچرا نظر آو؟ فوٹو سیتھ جلدی رپورٹ کریو۔",
+reportNow: "📷 وُنِ رپورٹ کریو",
+
+wasteSegregation: "♻️ کچرے ہُنٛد الگ کرُن",
+
+identifyWaste: "کچرا پہچانو",
+identifyDescription: "کچرے ہُنٛد قسم پہچاننے خٲطرٕ AI استعمال کریو۔",
+
+learn: "سیکھو",
+learnDescription: "کچرا صحیح طریقہ الگ کرُن سیکھو۔",
+
+nearbyServices: "📍 نزدیٖک سروس",
+
+nearbyDustbins: "نزدیٖک کچرے دان",
+dustbinDescription: "تُہند جٲے نزدیٖک کچرے دان تلاش کریو۔",
+
+collectionCentres: "کچرا جمع کرن مرکز",
+centreDescription: "نزدیٖک کچرا جمع کرن تہٕ ری سائیکلنگ مرکز تلاش کریو۔",
+
+trackVehicle: "کچرا جمع کرن والی گاڑی ٹریک کریو",
+trackDescription: "تُہند جٲے نزدیٖک کچرا جمع کرن والی گاڑی ٹریک کریو۔",
+
+language: "زبان",
+languageDescription: "پنٛنۍ پسندیدہ زبان منتخب کریو۔",
+
+wasteCollection: "🚛 کچرا جمع کرُن",
+nextCollection: "🗓️ اگلا جمع کرُن",
+tomorrow: "ژٕن",
+
+wetWaste: "گژھ کچرا",
+dryWaste: "خشک کچرا",
+
+myReports: "📋 میٲن رپورٹ",
+pending: "زیر التوا",
+inProgress: "جاری",
+resolved: "حل کرنہٕ آو",
+
+cleanlinessPoints: "⭐ میٲن صفائی پوائنٹس",
+yourPoints: "تُہند پوائنٹس",
+
+cleanCityTip: "🌱 صاف شہر مشورہ",
+separateWaste: "♻️ پنٛن کچرا الگ کریو",
+separateDescription: "ری سائیکلنگ تہٕ کمپوسٹنگ آسان بناونہٕ خٲطرٕ گژھ تہٕ خشک کچرا الگ تھاویو۔",
+
+home: "گھر",
+report: "رپورٹ",
+reports: "رپورٹ",
+profile: "پروفائل"
+
+},
+
+
+/* ================= SINDHI ================= */
+
+sd: {
+
+hello: "سلام! 👋",
+welcome: "اچو ته گڏجي پنهنجي شهر کي صاف رکون.",
+yourLocation: "توهان جي جڳهه",
+
+reportWaste: "📸 ڪچري جي رپورٽ ڪريو",
+reportDescription: "ڪچرو مليو؟ تصوير سان جلدي رپورٽ ڪريو.",
+reportNow: "📷 هاڻي رپورٽ ڪريو",
+
+wasteSegregation: "♻️ ڪچري جي ورهاست",
+
+identifyWaste: "ڪچري جي سڃاڻپ ڪريو",
+identifyDescription: "ڪچري جي قسم جي سڃاڻپ لاءِ AI استعمال ڪريو.",
+
+learn: "سکو",
+learnDescription: "ڪچري کي صحيح طريقي سان الڳ ڪرڻ سکو.",
+
+nearbyServices: "📍 ويجهيون خدمتون",
+
+nearbyDustbins: "ويجها ڪچري جا دٻا",
+dustbinDescription: "پنهنجي جڳهه جي ويجهو ڪچري جا دٻا ڳوليو.",
+
+collectionCentres: "ڪچرو گڏ ڪرڻ جا مرڪز",
+centreDescription: "ويجها ڪچرو گڏ ڪرڻ ۽ ري سائيڪلنگ مرڪز ڳوليو.",
+
+trackVehicle: "ڪچرو گڏ ڪرڻ واري گاڏي کي ٽريڪ ڪريو",
+trackDescription: "پنهنجي جڳهه جي ويجهو ڪچرو گڏ ڪرڻ واري گاڏي کي ٽريڪ ڪريو.",
+
+language: "ٻولي",
+languageDescription: "پنهنجي پسنديده ٻولي چونڊيو.",
+
+wasteCollection: "🚛 ڪچرو گڏ ڪرڻ",
+nextCollection: "🗓️ ايندڙ گڏ ڪرڻ",
+tomorrow: "سڀاڻي",
+
+wetWaste: "آلو ڪچرو",
+dryWaste: "سڪل ڪچرو",
+
+myReports: "📋 منهنجون رپورٽون",
+pending: "التوا ۾",
+inProgress: "جاري",
+resolved: "حل ٿيل",
+
+cleanlinessPoints: "⭐ منهنجا صفائي پوائنٽس",
+yourPoints: "توهان جا پوائنٽس",
+
+cleanCityTip: "🌱 صاف شهر جي صلاح",
+separateWaste: "♻️ پنهنجو ڪچرو الڳ ڪريو",
+separateDescription: "ري سائيڪلنگ ۽ ڪمپوسٽنگ کي آسان بڻائڻ لاءِ آلو ۽ سڪل ڪچرو الڳ رکو.",
+
+home: "گهر",
+report: "رپورٽ",
+reports: "رپورٽون",
+profile: "پروفائل"
+
+},
+
+
+/* ================= DOGRI ================= */
+
+doi: {
+
+hello: "नमस्ते! 👋",
+welcome: "आओ रलियै अपने शहर गी साफ रखचै।",
+yourLocation: "तुआढ़ा स्थान",
+
+reportWaste: "📸 कचरे दी रिपोर्ट करो",
+reportDescription: "कचरा दिक्खेआ? फोटो कन्नै जल्दी रिपोर्ट करो।",
+reportNow: "📷 हून रिपोर्ट करो",
+
+wasteSegregation: "♻️ कचरा अलग करना",
+
+identifyWaste: "कचरा पन्छानो",
+identifyDescription: "कचरे दी किस्म पन्छानने आस्तै AI दा इस्तेमाल करो।",
+
+learn: "सिक्खो",
+learnDescription: "कचरे गी सही तरीके कन्नै अलग करना सिक्खो।",
+
+nearbyServices: "📍 नेड़े दियां सेवां",
+
+nearbyDustbins: "नेड़े दे कूड़ेदान",
+dustbinDescription: "अपने स्थान दे नेड़े कूड़ेदान लब्भो।",
+
+collectionCentres: "कचरा संग्रह केंद्र",
+centreDescription: "नेड़े दे कचरा संग्रह ते रीसाइक्लिंग केंद्र लब्भो।",
+
+trackVehicle: "कचरा संग्रह वाहन ट्रैक करो",
+trackDescription: "अपने स्थान दे नेड़े कचरा संग्रह वाहन ट्रैक करो।",
+
+language: "भाशा",
+languageDescription: "अपनी पसंद दी भाशा चुनो।",
+
+wasteCollection: "🚛 कचरा संग्रह",
+nextCollection: "🗓️ अगला संग्रह",
+tomorrow: "कल",
+
+wetWaste: "गीला कचरा",
+dryWaste: "सुक्का कचरा",
+
+myReports: "📋 मेरियां रिपोर्टां",
+pending: "बाकी",
+inProgress: "प्रगति च",
+resolved: "हल होई गेआ",
+
+cleanlinessPoints: "⭐ मेरे सफाई अंक",
+yourPoints: "तुआढ़े अंक",
+
+cleanCityTip: "🌱 साफ शहर सलाह",
+separateWaste: "♻️ अपना कचरा अलग करो",
+separateDescription: "रीसाइक्लिंग ते कम्पोस्टिंग आसान बनाने आस्तै गीला ते सुक्का कचरा अलग रखो।",
+
+home: "मुखपृष्ठ",
+report: "रिपोर्ट",
+reports: "रिपोर्टां",
+profile: "प्रोफाइल"
+
+},
+
+
+/* ================= MANIPURI / MEITEI ================= */
+
+mni: {
+
+hello: "ꯍꯥꯏꯖꯔꯤ! 👋",
+welcome: "ꯑꯩꯈꯣꯏꯅ ꯑꯃꯥ ꯑꯃꯥꯒ ꯁꯍꯔꯕꯨ ꯁꯦꯜ ꯊꯥꯗꯅꯥ ꯂꯩꯁꯤ।",
+yourLocation: "ꯅꯍꯥꯛꯀꯤ ꯐꯥꯎꯕ",
+
+reportWaste: "📸 ꯂꯩꯔꯤꯕ ꯂꯣꯏꯁꯤꯡ ꯔꯤꯄꯣꯔꯠ ꯇꯧ",
+reportDescription: "ꯂꯣꯏꯁꯤꯡ ꯂꯩꯔꯕ? ꯐꯣꯇꯣꯒ ꯂꯣꯏꯅ ꯔꯤꯄꯣꯔꯠ ꯇꯧꯕꯤꯌꯨ।",
+reportNow: "📷 ꯅꯣꯡꯃꯥ ꯔꯤꯄꯣꯔꯠ ꯇꯧ",
+
+wasteSegregation: "♻️ ꯂꯣꯏꯁꯤꯡ ꯁꯦꯡꯕ",
+
+identifyWaste: "ꯂꯣꯏꯁꯤꯡ ꯁꯦꯡꯕ",
+identifyDescription: "ꯂꯣꯏꯁꯤꯡꯒꯤ ꯃꯑꯣꯡ ꯈꯪꯅꯕ AI ꯁꯤ ꯁꯤꯌꯨ।",
+
+learn: "ꯂꯃꯖꯔꯤ",
+learnDescription: "ꯂꯣꯏꯁꯤꯡ ꯃꯁꯤꯒꯤ ꯃꯑꯣꯡꯗ ꯁꯦꯡꯕ ꯂꯃꯖꯔꯤ।",
+
+nearbyServices: "📍 ꯅꯨꯡꯁꯤꯕꯗ ꯂꯩꯕ ꯁꯦꯔꯚꯤꯁ",
+
+nearbyDustbins: "ꯅꯨꯡꯁꯤꯕꯗ ꯂꯩꯕ ꯀꯨꯔꯥꯁꯕꯤꯅ",
+dustbinDescription: "ꯅꯍꯥꯛꯀꯤ ꯐꯥꯎꯕꯗ ꯂꯩꯕ ꯀꯨꯔꯥꯁꯕꯤꯅ ꯈꯣꯡꯗꯣꯛꯄꯤꯌꯨ।",
+
+collectionCentres: "ꯂꯣꯏꯁꯤꯡ ꯁꯦꯡꯕ ꯁꯦꯟꯇꯔ",
+centreDescription: "ꯅꯨꯡꯁꯤꯕꯗ ꯂꯩꯕ ꯂꯣꯏꯁꯤꯡ ꯁꯦꯡꯕ ꯑꯃꯁꯨꯡ ꯔꯤꯁꯥꯏꯀ꯭ꯂꯤꯡ ꯁꯦꯟꯇꯔ ꯈꯣꯡꯗꯣꯛꯄꯤꯌꯨ।",
+
+trackVehicle: "ꯂꯣꯏꯁꯤꯡ ꯁꯦꯡꯕ ꯚꯦꯍꯤꯀꯜ ꯇ꯭ꯔꯦꯀ ꯇꯧ",
+trackDescription: "ꯅꯍꯥꯛꯀꯤ ꯐꯥꯎꯕꯗ ꯂꯩꯕ ꯂꯣꯏꯁꯤꯡ ꯁꯦꯡꯕ ꯚꯦꯍꯤꯀꯜ ꯇ꯭ꯔꯦꯀ ꯇꯧ।",
+
+language: "ꯂꯣꯟ",
+languageDescription: "ꯅꯍꯥꯛꯀꯤ ꯄꯥꯃꯖꯕ ꯂꯣꯟ ꯈꯜꯂꯨ।",
+
+wasteCollection: "🚛 ꯂꯣꯏꯁꯤꯡ ꯁꯦꯡꯕ",
+nextCollection: "🗓️ ꯃꯇꯨꯡ ꯑꯣꯟꯕ ꯁꯦꯡꯕ",
+tomorrow: "ꯅꯨꯃꯤꯠ ꯂꯥꯛꯄ",
+
+wetWaste: "ꯏꯁꯤꯡ ꯂꯣꯏꯁꯤꯡ",
+dryWaste: "ꯅꯨꯡꯁꯤꯕ ꯂꯣꯏꯁꯤꯡ",
+
+myReports: "📋 ꯑꯩꯒꯤ ꯔꯤꯄꯣꯔꯠ",
+pending: "ꯂꯥꯛꯄꯒꯤ ꯃꯇꯥꯡ",
+inProgress: "ꯊꯣꯛꯂꯤ",
+resolved: "ꯂꯣꯏꯁꯤꯟꯅꯔꯦ",
+
+cleanlinessPoints: "⭐ ꯑꯩꯒꯤ ꯁꯦꯜꯂꯥꯛ ꯄꯣꯏꯟꯠ",
+yourPoints: "ꯅꯍꯥꯛꯀꯤ ꯄꯣꯏꯟꯠ",
+
+cleanCityTip: "🌱 ꯁꯦꯜ ꯊꯥꯗꯅ ꯁꯍꯔꯒꯤ ꯇꯤꯞ",
+separateWaste: "♻️ ꯅꯍꯥꯛꯀꯤ ꯂꯣꯏꯁꯤꯡ ꯑꯃꯥ ꯑꯃꯥ ꯇꯧ",
+separateDescription: "ꯔꯤꯁꯥꯏꯀ꯭ꯂꯤꯡ ꯑꯃꯁꯨꯡ ꯀꯣꯝꯄꯣꯁꯇꯤꯡ ꯂꯥꯏꯄꯥꯛ ꯇꯧꯅꯕ ꯏꯁꯤꯡ ꯑꯃꯁꯨꯡ ꯅꯨꯡꯁꯤꯕ ꯂꯣꯏꯁꯤꯡ ꯑꯃꯥ ꯑꯃꯥ ꯊꯥꯕꯤꯌꯨ।",
+
+home: "ꯍꯣꯝ",
+report: "ꯔꯤꯄꯣꯔꯠ",
+reports: "ꯔꯤꯄꯣꯔꯠꯁꯤꯡ",
+profile: "ꯄ꯭ꯔꯣꯐꯥꯏꯜ"
+
+},
+
+
+/* ================= BODO ================= */
+
+brx: {
+
+hello: "नमस्कार! 👋",
+welcome: "आं जों लोगोसे न'रगोरखौ सफा राखिगोन।",
+yourLocation: "नोंथांनि जायगा",
+
+reportWaste: "📸 फोथारनि रिपोर्ट खालाम",
+reportDescription: "फोथार नुयो? फोटो लोगोसे खस रिपोर्ट खालाम।",
+reportNow: "📷 दानि रिपोर्ट खालाम",
+
+wasteSegregation: "♻️ फोथार सायखरनाय",
+
+identifyWaste: "फोथार सिन्नाय",
+identifyDescription: "फोथारनि रोखोम सिन्नायनो AI बाहाय।",
+
+learn: "सोलों",
+learnDescription: "फोथारखौ मोजां महरै आलादा खालामनाय सोलों।",
+
+nearbyServices: "📍 सोमोना सेवासिन",
+
+nearbyDustbins: "सोमोना फोथार दान",
+dustbinDescription: "नोंथांनि जायगानि सोमोना फोथार दान नाय।",
+
+collectionCentres: "फोथार जमा केन्द्र",
+centreDescription: "सोमोना फोथार जमा आरो रिसाइक्लिङ केन्द्र नाय।",
+
+trackVehicle: "जमा गारिनि ट्रेक खालाम",
+trackDescription: "नोंथांनि जायगानि सोमोना फोथार जमा गारिखौ ट्रेक खालाम।",
+
+language: "राव",
+languageDescription: "नोंथांनि मोजां रावखौ सायख।",
+
+wasteCollection: "🚛 फोथार जमा",
+nextCollection: "🗓️ उननि जमा",
+tomorrow: "फैसालि",
+
+wetWaste: "दै फोथार",
+dryWaste: "सुखा फोथार",
+
+myReports: "📋 आंनि रिपोर्ट",
+pending: "थाखाय थाखाय",
+inProgress: "जाबाय",
+resolved: "साफ खालामनाय",
+
+cleanlinessPoints: "⭐ आंनि सफा राखिनाय पोइन्ट",
+yourPoints: "नोंथांनि पोइन्ट",
+
+cleanCityTip: "🌱 सफा न'रगोरनि सोलों",
+separateWaste: "♻️ नोंथांनि फोथार आलादा खालाम",
+separateDescription: "रिसाइक्लिङ आरो कम्पोस्टिङ सुबिदा खालामनो दै फोथार आरो सुखा फोथार आलादा राख।",
+
+home: "न'",
+report: "रिपोर्ट",
+reports: "रिपोर्टसिन",
+profile: "प्रोफाइल"
+
+},
+
+
+/* ================= SANTALI ================= */
+
+sat: {
+
+hello: "ᱡᱚᱦᱟᱨ! 👋",
+welcome: "ᱫᱚᱞᱚ ᱢᱤᱫᱴᱟᱹᱱ ᱛᱮ ᱟᱵᱚ ᱥᱟᱦᱟᱨ ᱥᱟᱯᱷᱟ ᱫᱚᱦᱚ ᱢᱮ।",
+yourLocation: "ᱟᱢᱟᱜ ᱡᱟᱭᱜᱟ",
+
+reportWaste: "📸 ᱡᱟᱹᱣᱟᱜ ᱨᱤᱯᱳᱨᱴ ᱢᱮ",
+reportDescription: "ᱡᱟᱹᱣᱟᱜ ᱧᱮᱞ ᱠᱮᱫᱟ? ᱯᱷᱳᱴᱳ ᱥᱟᱶ ᱛᱮ ᱜᱚᱲᱚ ᱨᱤᱯᱳᱨᱴ ᱢᱮ।",
+reportNow: "📷 ᱱᱤᱛᱚᱜ ᱨᱤᱯᱳᱨᱴ ᱢᱮ",
+
+wasteSegregation: "♻️ ᱡᱟᱹᱣᱟᱜ ᱵᱷᱟᱜ ᱢᱮ",
+
+identifyWaste: "ᱡᱟᱹᱣᱟᱜ ᱪᱤᱱᱦᱟᱹ ᱢᱮ",
+identifyDescription: "ᱡᱟᱹᱣᱟᱜ ᱨᱮᱭᱟᱜ ᱯᱨᱚᱠᱟᱨ ᱪᱤᱱᱦᱟᱹ ᱠᱟᱛᱮ  AI ᱵᱟᱵᱚᱛ ᱢᱮ।",
+
+learn: "ᱥᱮᱪᱮᱫ ᱢᱮ",
+learnDescription: "ᱡᱟᱹᱣᱟᱜ ᱥᱩᱞᱤ ᱞᱮᱠᱟ ᱵᱷᱟᱜ ᱢᱮ ᱥᱮᱪᱮᱫ ᱢᱮ।",
+
+nearbyServices: "📍 ᱥᱟᱢᱟᱱᱟ ᱥᱮᱵᱟ",
+
+nearbyDustbins: "ᱥᱟᱢᱟᱱᱟ ᱠᱩᱲᱟᱹ ᱰᱟᱱ",
+dustbinDescription: "ᱟᱢᱟᱜ ᱡᱟᱭᱜᱟ ᱥᱟᱢᱟᱱᱟ ᱠᱩᱲᱟᱹ ᱰᱟᱱ ᱧᱮᱞ ᱢᱮ।",
+
+collectionCentres: "ᱡᱟᱹᱣᱟᱜ ᱡᱚᱢᱟ ᱠᱮᱱᱫᱨ",
+centreDescription: "ᱥᱟᱢᱟᱱᱟ ᱡᱟᱹᱣᱟᱜ ᱡᱚᱢᱟ ᱟᱨ ᱨᱤᱥᱟᱭᱠᱞᱤᱝ ᱠᱮᱱᱫᱨ ᱧᱮᱞ ᱢᱮ।",
+
+trackVehicle: "ᱡᱚᱢᱟ ᱵᱟᱦᱟᱱ ᱴᱨᱟᱠ ᱢᱮ",
+trackDescription: "ᱟᱢᱟᱜ ᱡᱟᱭᱜᱟ ᱥᱟᱢᱟᱱᱟ ᱡᱟᱹᱣᱟᱜ ᱡᱚᱢᱟ ᱵᱟᱦᱟᱱ ᱴᱨᱟᱠ ᱢᱮ।",
+
+language: "ᱯᱟᱹᱨᱥᱤ",
+languageDescription: "ᱟᱢᱟᱜ ᱯᱥᱚᱱᱫ ᱯᱟᱹᱨᱥᱤ ᱵᱟᱪᱷᱱᱟᱣ ᱢᱮ।",
+
+wasteCollection: "🚛 ᱡᱟᱹᱣᱟᱜ ᱡᱚᱢᱟ",
+nextCollection: "🗓️ ᱞᱟᱦᱟᱱᱛᱤ ᱡᱚᱢᱟ",
+tomorrow: "ᱜᱟᱯᱟ",
+
+wetWaste: "ᱵᱷᱤᱡᱟ ᱡᱟᱹᱣᱟᱜ",
+dryWaste: "ᱥᱩᱠᱷᱟ ᱡᱟᱹᱣᱟᱜ",
+
+myReports: "📋 ᱟᱢᱟᱜ ᱨᱤᱯᱳᱨᱴ",
+pending: "ᱛᱟᱠᱟᱣ",
+inProgress: "ᱞᱟᱹᱞᱚᱠ",
+resolved: "ᱥᱟᱢᱟᱫᱷᱟᱱ",
+
+cleanlinessPoints: "⭐ ᱟᱢᱟᱜ ᱥᱟᱯᱷᱟ ᱯᱳᱭᱤᱱᱴ",
+yourPoints: "ᱟᱢᱟᱜ ᱯᱳᱭᱤᱱᱴ",
+
+cleanCityTip: "🌱 ᱥᱟᱯᱷᱟ ᱥᱟᱦᱟᱨ ᱴᱤᱯ",
+separateWaste: "♻️ ᱟᱢᱟᱜ ᱡᱟᱹᱣᱟᱜ ᱵᱷᱟᱜ ᱢᱮ",
+separateDescription: "ᱨᱤᱥᱟᱭᱠᱞᱤᱝ ᱟᱨ ᱠᱚᱢᱯᱚᱥᱴᱤᱝ ᱥᱚᱞᱤ ᱠᱟᱛᱮ ᱵᱷᱤᱡᱟ ᱟᱨ ᱥᱩᱠᱷᱟ ᱡᱟᱹᱣᱟᱜ ᱵᱷᱟᱜ ᱢᱮ।",
+
+home: "ᱚᱲᱟᱜ",
+report: "ᱨᱤᱯᱳᱨᱴ",
+reports: "ᱨᱤᱯᱳᱨᱴ",
+profile: "ᱯᱨᱚᱯᱷᱟᱭᱞ"
+
+}
+
+};
+function applyLanguage() {
+
+    const language =
+        localStorage.getItem("cleanCityLanguage") || "en";
+
+    const elements =
+        document.querySelectorAll("[data-key]");
+
+    elements.forEach(function(element) {
+
+        const key = element.getAttribute("data-key");
+
+        if (translations[language] &&
+            translations[language][key]) {
+
+            element.textContent =
+                translations[language][key];
+        }
+    });
+}
+document.addEventListener("DOMContentLoaded", function() {
+    applyLanguage();
+});
+
+
+/* =====================================================
+   APPLY LANGUAGE
+   ===================================================== */
+
+function applyLanguage() {
+
+    const selectedLanguage =
+        localStorage.getItem("cleanCityLanguage") || "en";
+
+    const language =
+        translations[selectedLanguage] || translations.en;
+
+    document.querySelectorAll("[data-key]").forEach(function(element) {
+
+        const key = element.getAttribute("data-key");
+
+        if (language[key]) {
+            element.textContent = language[key];
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
+
+function reportWaste() {
+    window.location.href = "report.html";
+}
+
+function identifyWaste() {
+    window.location.href = "identify.html";
+}
+
+function learnSegregation() {
+    window.location.href = "learn.html";
+}
+
+function openDustbins() {
+    window.location.href = "nearby.html";
+}
+
+function openRecycleCentres() {
+    window.location.href = "recycle.html";
+}
+
+function trackVehicle() {
+    window.location.href = "trackvehicle.html";
+}
+
+function openLanguage() {
+    window.location.href = "language.html";
+}
+
+function showReports() {
+    window.location.href = "reports.html";
+}
+
+function showProfile() {
+    window.location.href="profile.html"
+}
+function openMap() {
+    window.location.href = "map.html";
+}
+
+function showNotification() {
+    window.location.href="notifications.html"
+}
+
+function goHome() {
+    window.location.href = "home.html";
+}
+
+
+/* =====================================================
+   RUN LANGUAGE
+   ===================================================== */
+
+document.addEventListener("DOMContentLoaded", function() {
+    applyLanguage();
+});
+function showReports() {
+    window.location.href = "reports.html";
+}
+/* CLEANLINESS POINTS */
+
+let points = 120;
+
+function updatePoints() {
+
+    document.getElementById("points").innerText = points;
+
+    let level;
+    let title;
+    let progress;
+    let pointsLeft;
+
+    if (points < 100) {
+
+        level = "Level 1";
+        title = "Clean City Beginner";
+        progress = points;
+        pointsLeft = 100 - points;
+
+    } else if (points < 200) {
+
+        level = "Level 2";
+        title = "Clean City Helper";
+        progress = points - 100;
+        pointsLeft = 200 - points;
+
+    } else if (points < 300) {
+
+        level = "Level 3";
+        title = "Clean City Champion";
+        progress = points - 200;
+        pointsLeft = 300 - points;
+
+    } else {
+
+        level = "Level 4";
+        title = "Clean City Star";
+        progress = 100;
+        pointsLeft = 0;
+
+    }
+
+    document.getElementById("level").innerText = level;
+
+    document.getElementById("levelTitle").innerText = title;
+
+    document.getElementById("progressBar").style.width =
+        progress + "%";
+
+    document.getElementById("pointsLeft").innerText =
+        pointsLeft;
+}
+
+updatePoints();
+/* =====================================================
+   LOAD MY REPORTS FROM BACKEND
+   ===================================================== */
+
+async function loadMyReportCounts() {
+
+    const storedUser = localStorage.getItem("cleanCityUser");
+
+    if (!storedUser) {
+        return;
+    }
+
+    const user = JSON.parse(storedUser);
+
+    if (!user.email) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/reports?email=" +
+            encodeURIComponent(user.email)
+        );
+
+        const reports = await response.json();
+
+        let pending = 0;
+        let inProgress = 0;
+        let resolved = 0;
+
+        reports.forEach(function(report) {
+
+            if (report.status === "Pending") {
+                pending++;
+            }
+
+            else if (
+                report.status === "In Progress" ||
+                report.status === "Assigned"
+            ) {
+                inProgress++;
+            }
+
+            else if (report.status === "Resolved") {
+                resolved++;
+            }
+
+        });
+
+        const reportNumbers =
+            document.querySelectorAll(".reports .report-status h3");
+
+        if (reportNumbers.length >= 3) {
+
+            reportNumbers[0].textContent = pending;
+            reportNumbers[1].textContent = inProgress;
+            reportNumbers[2].textContent = resolved;
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Unable to load report counts:",
+            error
+        );
+
+    }
+}
+async function loadMyPoints() {
+
+    const storedUser =
+        localStorage.getItem("cleanCityUser");
+
+    if (!storedUser) {
+        return;
+    }
+
+    const user =
+        JSON.parse(storedUser);
+
+    if (!user.email) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:3001/users/points?email=" +
+                encodeURIComponent(user.email)
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                "Unable to load points"
+            );
+        }
+
+        document.getElementById("points").textContent =
+            data.points;
+
+        const points =
+            Number(data.points);
+
+        const level =
+            Math.floor(points / 100) + 1;
+
+        document.getElementById("level").textContent =
+            "Level " + level;
+
+        document.getElementById("levelTitle").textContent =
+            level === 1
+                ? "New Cleaner"
+                : level === 2
+                ? "Clean City Helper"
+                : "Clean City Champion";
+
+        const nextLevelPoints =
+            ((level * 100) - points);
+
+        document.getElementById("pointsLeft").textContent =
+            nextLevelPoints > 0
+                ? nextLevelPoints
+                : 0;
+
+        const progress =
+            points % 100;
+
+        document.getElementById("progressBar").style.width =
+            progress + "%";
+
+    } catch (error) {
+
+        console.error(
+            "Unable to load cleanliness points:",
+            error
+        );
+
+    }
+}
+
+
+/* Load report counts when Home page opens */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadMyReportCounts();
+
+        loadMyPoints();
+        loadNextCollectionTime();
+
+    }
+);
+</script>
+<script src="language.js"></script>
+
+</body>
+</html>

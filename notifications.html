@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>CleanCity - Notifications</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f3f8f4;
+    color: #222;
+}
+
+header {
+    background: #168a45;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back {
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.container {
+    width: 90%;
+    max-width: 650px;
+    margin: 25px auto;
+}
+
+.notification {
+    background: white;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.notification h3 {
+    margin-bottom: 7px;
+    color: #168a45;
+}
+
+.notification p {
+    color: #555;
+    line-height: 1.5;
+}
+
+.home-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 25px;
+    background: #168a45;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="back" onclick="goHome()">←</div>
+
+    <h1>🔔 Notifications</h1>
+
+</header>
+
+
+<div class="container">
+
+    <div id="notificationList">
+
+        <div class="notification">
+            <p>Loading notifications...</p>
+        </div>
+
+    </div>
+
+
+    <button class="home-btn"
+            onclick="goHome()">
+
+        🏠 Back to Home
+
+    </button>
+
+</div>
+
+<script>
+
+async function loadNotifications() {
+
+    const storedUser =
+        localStorage.getItem("cleanCityUser");
+
+    const notificationList =
+        document.getElementById("notificationList");
+
+    if (!storedUser) {
+
+        notificationList.innerHTML = `
+            <div class="notification">
+                <h3>🔐 Login Required</h3>
+                <p>Please login to view your notifications.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    const user =
+        JSON.parse(storedUser);
+
+    if (!user.email) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:3001/notifications?email=" +
+                encodeURIComponent(user.email)
+            );
+
+        const reports =
+            await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                reports.message ||
+                "Unable to load notifications"
+            );
+        }
+
+        notificationList.innerHTML = "";
+
+        if (reports.length === 0) {
+
+            notificationList.innerHTML = `
+                <div class="notification">
+                    <h3>🔔 No Notifications</h3>
+                    <p>
+                        You don't have any report updates yet.
+                    </p>
+                </div>
+            `;
+
+            return;
+        }
+
+        reports.forEach(function(report) {
+
+            let title = "";
+            let message = "";
+            let icon = "";
+
+            if (report.status === "Pending") {
+
+                icon = "🟡";
+                title = "Report Submitted";
+                message =
+                    "Your waste complaint has been successfully submitted to the concerned authority.";
+
+            }
+            else if (
+                report.status === "Assigned" ||
+                report.status === "In Progress"
+            ) {
+
+                icon = "🔵";
+                title = "Report Under Process";
+                message =
+                    "Your reported waste issue is currently being processed by the cleaning team.";
+
+            }
+            else if (report.status === "Resolved") {
+
+                icon = "🟢";
+                title = "Report Resolved";
+                message =
+                    "Your reported waste issue has been successfully resolved. Thank you for helping keep your city clean!";
+
+            }
+            else if (report.status === "Rejected") {
+
+                icon = "🔴";
+                title = "Report Rejected";
+                message =
+                    "Your waste complaint was reviewed and marked as rejected by the authority.";
+
+            }
+
+            notificationList.innerHTML += `
+
+                <div class="notification">
+
+                    <h3>
+                        ${icon} ${title}
+                    </h3>
+
+                    <p>
+                        ${message}
+                    </p>
+
+                    <p style="margin-top:8px;font-size:13px;">
+                        Report ID:
+                        <strong>${report.report_id}</strong>
+                    </p>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+    catch (error) {
+
+        console.error(
+            "Notification error:",
+            error
+        );
+
+        notificationList.innerHTML = `
+
+            <div class="notification">
+
+                <h3>⚠️ Unable to Load Notifications</h3>
+
+                <p>
+                    Please make sure the CleanCity backend is running.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+function goHome() {
+
+    window.location.href = "home.html";
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadNotifications();
+
+    }
+);
+
+</script>
+<script src="language.js"></script>
+
+</body>
+
+</html>

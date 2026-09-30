@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Track Collection Vehicle</title>
+
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          crossorigin="" />
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f8f4;
+            color: #222;
+        }
+
+        /* Header */
+
+        header {
+            background: #168a45;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back {
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        header h2 {
+            font-size: 21px;
+        }
+
+        /* Main */
+
+        .container {
+            padding: 25px 7%;
+        }
+
+        .title {
+            margin-bottom: 20px;
+        }
+
+        .title h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .title p {
+            color: #666;
+        }
+
+        /* Search */
+
+        .search-box {
+            background: white;
+            padding: 18px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .search-box label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-row input {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .search-row button {
+            background: #168a45;
+            color: white;
+            border: none;
+            padding: 13px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Location */
+
+        .location {
+            background: #e4f4e9;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .location strong {
+            color: #168a45;
+        }
+
+        /* Vehicle Card */
+
+        .vehicle-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            margin-bottom: 18px;
+        }
+
+        .vehicle-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .vehicle-icon {
+            font-size: 40px;
+        }
+
+        .status {
+            background: #dff5e5;
+            color: #168a45;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .vehicle-name {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .vehicle-info {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        /* Arrival */
+
+        .arrival {
+            background: #f0f8f2;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .arrival-time {
+            font-size: 23px;
+            font-weight: bold;
+            color: #168a45;
+        }
+
+        /* MAP */
+
+        #map {
+            height: 350px;
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        /* Refresh */
+
+        .refresh {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: #168a45;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .refresh:hover,
+        .search-row button:hover {
+            background: #106c35;
+        }
+
+        /* No vehicle */
+
+        .no-vehicle {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .no-vehicle div {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* Mobile */
+
+        @media(max-width:600px) {
+
+            .container {
+                padding: 20px 5%;
+            }
+
+            header {
+                padding: 15px 5%;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+            .search-row button {
+                width: 100%;
+            }
+
+            #map {
+                height: 300px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <span class="back"
+              onclick="goBack()">
+            ←
+        </span>
+
+        <h2>
+            🚛 Track Collection Vehicle
+        </h2>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+
+        <div class="title">
+
+            <h1>
+                Find Collection Vehicle
+            </h1>
+
+            <p>
+                Search your location to find nearby waste collection vehicles.
+            </p>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+            <label>
+                📍 Enter Your Location
+            </label>
+
+            <div class="search-row">
+
+                <input
+                    type="text"
+                    id="locationInput"
+                    placeholder="Example: Coimbatore">
+
+                <button onclick="searchVehicle()">
+                    SEARCH
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="location"
+             id="locationDisplay">
+
+            📍 Search a location to find
+            <strong>nearby collection vehicles.</strong>
+
+        </div>
+
+
+        <!-- VEHICLE RESULT -->
+
+        <div id="vehicleResult"
+             style="display:none;">
+
+
+            <div class="vehicle-card">
+
+
+                <div class="vehicle-top">
+
+                    <div class="vehicle-icon">
+                        🚛
+                    </div>
+
+                    <div class="status">
+                        🟢 ON ROUTE
+                    </div>
+
+                </div>
+
+
+                <h2 class="vehicle-name">
+                    Collection Vehicle - TN 38 AB 1234
+                </h2>
+
+
+                <div class="vehicle-info">
+
+                    📍 Current Location:
+                    <strong id="currentLocation">
+                        Near your area
+                    </strong>
+
+                    <br>
+
+                    ♻️ Waste Type:
+                    Wet & Dry Waste
+
+                    <br>
+
+                    🚛 Vehicle:
+                    Waste Collection Van
+
+                </div>
+
+
+                <!-- ARRIVAL -->
+
+                <div class="arrival">
+
+                    <div>
+
+                        <p>
+                            Estimated Arrival
+                        </p>
+
+                        <div class="arrival-time"
+                             id="arrivalTime">
+                            15 mins
+                        </div>
+
+                    </div>
+
+                    <div>
+                        🕐
+                    </div>
+
+                </div>
+
+
+                <!-- COLLECTION TIME -->
+
+                <div class="arrival">
+
+                    <div>
+
+                        <p>
+                            Today's Collection Time
+                        </p>
+
+                        <strong>
+                            7:00 AM - 9:00 AM
+                        </strong>
+
+                    </div>
+
+                    <div>
+                        🗓️
+                    </div>
+
+                </div>
+
+
+                <!-- INTERACTIVE MAP -->
+
+                <div id="map"></div>
+
+
+                <button class="refresh"
+                        onclick="refreshVehicle()">
+
+                    🔄 Refresh Vehicle Status
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- NO VEHICLE -->
+
+        <div class="no-vehicle"
+             id="noVehicle">
+
+            <div>
+                🚛
+            </div>
+
+            <h3>
+                No Vehicle Found
+            </h3>
+
+            <p style="margin-top:8px;color:#666;">
+
+                No collection vehicle is currently
+                available for this location.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- LEAFLET JS -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        crossorigin="">
+    </script>
+
+
+    <script>
+
+
+        let map = null;
+
+
+/*
+ * Search Vehicle
+ */
+
+async function searchVehicle() {
+
+    const location =
+        document.getElementById("locationInput").value.trim();
+
+    const resultContainer =
+        document.getElementById("vehicleResult");
+
+    const noVehicle =
+        document.getElementById("noVehicle");
+
+    const locationDisplay =
+        document.getElementById("locationDisplay");
+
+
+    if (!location) {
+
+        alert("Please enter a location.");
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/collection-vehicles?location="
+            + encodeURIComponent(location)
+        );
+
+
+        const vehicles =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                vehicles.message ||
+                "Unable to load vehicles"
+            );
+        }
+
+
+        locationDisplay.innerHTML =
+            "📍 Showing collection vehicles for <strong>"
+            + location +
+            "</strong>";
+
+
+        /*
+         * No vehicle found
+         */
+
+        if (vehicles.length === 0) {
+
+            resultContainer.style.display = "none";
+
+            noVehicle.style.display = "block";
+
+            return;
+        }
+
+
+        /*
+         * Vehicle found
+         */
+
+        noVehicle.style.display = "none";
+
+        resultContainer.style.display = "block";
+
+        resultContainer.innerHTML = "";
+
+
+        vehicles.forEach(function(vehicle) {
+
+            const statusText =
+                vehicle.status || "Collection Pending";
+
+
+            resultContainer.innerHTML += `
+
+                <div class="vehicle-card">
+
+                    <div class="vehicle-top">
+
+                        <div class="vehicle-icon">
+                            🚛
+                        </div>
+
+                        <div class="status">
+                            ${statusText}
+                        </div>
+
+                    </div>
+
+
+                    <h2 class="vehicle-name">
+
+                        ${vehicle.vehicle_number ||
+                          vehicle.vehicle_name}
+
+                    </h2>
+
+
+                    <div class="vehicle-info">
+
+                        🚛 Vehicle:
+                        <strong>
+                            ${vehicle.vehicle_name}
+                        </strong>
+
+                        <br>
+
+                        📍 Current Location:
+                        <strong>
+                            ${vehicle.location}
+                        </strong>
+
+                        <br>
+
+                        🛣️ Route:
+                        <strong>
+                            ${vehicle.route}
+                        </strong>
+
+                        <br>
+
+                        📌 Ward:
+                        <strong>
+                            ${vehicle.ward ||
+                             "Not assigned"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="arrival">
+
+                        <div>
+
+                            <p>
+                                Collection Time
+                            </p>
+
+                            <div class="arrival-time">
+
+                                ${vehicle.collection_time ||
+                                  "Not available"}
+
+                            </div>
+
+                        </div>
+
+                        <div>
+                            🕐
+                        </div>
+
+                    </div>
+
+
+                    <div class="arrival">
+
+                        <div>
+
+                            <p>
+                                Vehicle Status
+                            </p>
+
+                            <strong>
+                                ${statusText}
+                            </strong>
+
+                        </div>
+
+                        <div>
+                            🚛
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Vehicle search error:",
+            error
+        );
+
+
+        resultContainer.style.display = "none";
+
+        noVehicle.style.display = "block";
+
+        noVehicle.innerHTML = `
+
+            <div>
+                ⚠️
+            </div>
+
+            <h3>
+                Unable to load vehicle details
+            </h3>
+
+            <p style="margin-top:8px;color:#666;">
+
+                Please make sure the
+                CleanCity backend is running.
+
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+/*
+ * Refresh Vehicle
+ */
+
+function refreshVehicle() {
+
+    const location =
+        document
+        .getElementById("locationInput")
+        .value
+        .trim();
+
+
+    if (!location) {
+
+        alert(
+            "Please search for a location first."
+        );
+
+        return;
+    }
+
+
+    searchVehicle();
+
+}
+
+
+/*
+ * Back to Home
+ */
+
+function goBack() {
+
+    window.location.href =
+        "home.html";
+
+}
+    </script>
+    <script src="language.js"></script>
+
+</body>
+
+</html>

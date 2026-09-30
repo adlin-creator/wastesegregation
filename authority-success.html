@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login Successful</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f8f4;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-box {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+
+            padding: 35px 25px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+
+        .icon {
+            font-size: 65px;
+        }
+
+        h1 {
+            color: #16833a;
+        }
+
+        p {
+            color: #555;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+
+            margin-top: 20px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #16833a;
+            color: white;
+
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="success-box">
+
+    <div class="icon">✅</div>
+
+    <h1>Login Successful!</h1>
+
+    <p id="welcomeText">
+        Welcome Authority
+    </p>
+
+    <p>
+        You can now access the CleanCity Authority Dashboard.
+    </p>
+
+    <button onclick="goHome()">
+        Continue to Dashboard
+    </button>
+
+</div>
+
+<script>
+
+const authority =
+    localStorage.getItem("authorityType");
+
+document.getElementById("welcomeText").innerHTML =
+    "Welcome, " + (authority || "Authority");
+
+function goHome() {
+
+    window.location.href =
+        "authority-home.html";
+}
+
+</script>
+
+</body>
+</html>

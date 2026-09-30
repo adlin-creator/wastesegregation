@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recycle Centers</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #eaf7ed;
+            color: #173d24;
+        }
+
+        /* HEADER */
+        header {
+            background: #087f3d;
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        header .logo {
+            font-size: 50px;
+        }
+
+        header h1 {
+            margin: 10px 0;
+            font-size: 38px;
+        }
+
+        header p {
+            font-size: 18px;
+        }
+
+        /* MAIN */
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        /* SEARCH */
+        .search-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #0002;
+        }
+
+        .search-box h2 {
+            color: #087f3d;
+        }
+
+        .search-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        input,
+        select {
+            padding: 14px;
+            border: 2px solid #c9e5d1;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #16a34a;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .search-btn {
+            background: #087f3d;
+            color: white;
+            flex: 1;
+        }
+
+        .search-btn:hover {
+            background: #05652f;
+        }
+
+        .clear-btn {
+            background: #ddd;
+        }
+
+        /* RESULTS */
+        #resultCount {
+            margin: 25px 0 15px;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px #0002;
+        }
+
+        .card-header {
+            background: #087f3d;
+            color: white;
+            padding: 20px;
+        }
+
+        .card-header h3 {
+            margin: 0 0 10px;
+            font-size: 22px;
+        }
+
+        .verified {
+            background: #d1fae5;
+            color: #047857;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .detail {
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        .detail strong {
+            color: #087f3d;
+        }
+
+        .waste {
+            display: inline-block;
+            background: #e5f6e9;
+            color: #087f3d;
+            padding: 6px 10px;
+            border-radius: 15px;
+            margin: 4px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .map-btn {
+            display: block;
+            text-align: center;
+            background: #16a34a;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        .map-btn:hover {
+            background: #087f3d;
+        }
+
+        /* NO RESULT */
+        .no-result {
+            background: white;
+            text-align: center;
+            padding: 40px;
+            border-radius: 15px;
+            grid-column: 1 / -1;
+        }
+
+        .no-result div {
+            font-size: 50px;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 50px;
+            background: #075c2d;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        /* MOBILE */
+        @media(max-width: 700px) {
+
+            .search-area {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div class="logo">
+        ♻️ 🌱
+    </div>
+
+    <h1>
+        Recycle Centers
+    </h1>
+
+    <p>
+        Find the right place to recycle your waste
+    </p>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- SEARCH BOX -->
+
+    <div class="search-box">
+
+        <h2>
+            🔎 Find Recycling Centers
+        </h2>
+
+
+        <div class="search-area">
+
+            <!-- CENTER NAME -->
+
+            <input
+                type="text"
+                id="centerName"
+                placeholder="Enter center name"
+            >
+
+
+            <!-- LOCATION -->
+
+            <input
+                type="text"
+                id="location"
+                placeholder="Enter location"
+            >
+
+
+            <!-- WASTE TYPE -->
+
+            <select id="wasteType">
+
+                <option value="">
+                    All Waste Types
+                </option>
+
+                <option value="Plastic">
+                    Plastic
+                </option>
+
+                <option value="Paper">
+                    Paper
+                </option>
+
+                <option value="Glass">
+                    Glass
+                </option>
+
+                <option value="Metal">
+                    Metal
+                </option>
+
+                <option value="E-Waste">
+                    E-Waste
+                </option>
+
+                <option value="Battery">
+                    Battery
+                </option>
+
+                <option value="Clothes">
+                    Clothes
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                class="search-btn"
+                onclick="searchCenters()">
+
+                🔍 Search Recycling Centers
+
+            </button>
+
+
+            <button
+                class="clear-btn"
+                onclick="clearSearch()">
+
+                Clear
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULT COUNT -->
+
+    <div id="resultCount"></div>
+
+
+    <!-- CENTER CARDS -->
+
+    <div
+        id="results"
+        class="cards">
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    ♻️ Recycle Today for a Greener Tomorrow 🌱
+
+</footer>
+
+
+
+<script>
+
+
+
+/*
+==================================================
+        DISPLAY CENTERS
+==================================================
+*/
+
+function displayCenters(centers) {
+
+    const results = document.getElementById("results");
+    const resultCount = document.getElementById("resultCount");
+
+    results.innerHTML = "";
+
+    resultCount.textContent =
+        `${centers.length} recycling center${centers.length !== 1 ? "s" : ""} found`;
+
+    if (centers.length === 0) {
+        results.innerHTML = `
+            <div class="card">
+                <h3>♻️ No Recycling Centers Found</h3>
+                <p>No matching recycling center records were found.</p>
+            </div>
+        `;
+        return;
+    }
+
+    centers.forEach(center => {
+
+        const wasteList = center.waste_types
+            ? center.waste_types.split(",").map(item => item.trim())
+            : [];
+
+        const wasteHTML = wasteList.map(waste => `
+            <span class="tag">${waste}</span>
+        `).join("");
+
+        results.innerHTML += `
+            <div class="card">
+
+                <h3>♻️ ${center.name}</h3>
+
+                <p>
+                    <strong>📍 Location:</strong>
+                    ${center.location}
+                </p>
+
+                <p>
+                    <strong>🏠 Address:</strong>
+                    ${center.address || "Not available"}
+                </p>
+
+                <p>
+                    <strong>🕒 Opening:</strong>
+                    ${center.opening_time || "Not available"}
+                </p>
+
+                <p>
+                    <strong>🕒 Closing:</strong>
+                    ${center.closing_time || "Not available"}
+                </p>
+
+                <p>
+                    <strong>📞 Phone:</strong>
+                    ${center.phone || "Not available"}
+                </p>
+
+                <p>
+                    <strong>📧 Email:</strong>
+                    ${center.email || "Not available"}
+                </p>
+
+                <p>
+                    <strong>♻️ Waste Accepted:</strong>
+                </p>
+
+                <div class="tags">
+                    ${wasteHTML}
+                </div>
+
+                <p>
+                    <strong>🟢 Status:</strong>
+                    ${center.status || "Available"}
+                </p>
+
+                <p class="verified">
+                    ✔ Prototype Record
+                </p>
+
+                <button
+                    onclick="openMap(${center.latitude}, ${center.longitude})">
+                    📍 Open in Google Maps
+                </button>
+
+            </div>
+        `;
+    });
+}
+function openMap(latitude, longitude) {
+
+    if (!latitude || !longitude) {
+        alert("Location coordinates are not available.");
+        return;
+    }
+
+    const mapURL =
+        `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+    window.open(mapURL, "_blank");
+}
+
+/*
+==================================================
+        SEARCH FUNCTION
+==================================================
+*/
+
+async function searchCenters() {
+
+    const name = document.getElementById("centerName").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const waste = document.getElementById("wasteType").value;
+
+    const params = new URLSearchParams();
+
+    if (name) {
+        params.append("name", name);
+    }
+
+    if (location) {
+        params.append("location", location);
+    }
+
+    if (waste) {
+        params.append("waste", waste);
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:3001/collection-centres?${params.toString()}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to load recycling centres");
+        }
+
+        const centers = await response.json();
+
+        displayCenters(centers);
+
+    } catch (error) {
+
+        console.error("Error:", error);
+
+        document.getElementById("results").innerHTML = `
+            <div class="card">
+                <h3>⚠️ Unable to Load Recycling Centers</h3>
+                <p>Please make sure the CleanCity backend is running.</p>
+            </div>
+        `;
+
+        document.getElementById("resultCount").textContent =
+            "Unable to load recycling centers";
+    }
+}
+
+/*
+==================================================
+        CLEAR BUTTON
+==================================================
+*/
+
+function clearSearch() {
+
+    document.getElementById("centerName").value = "";
+    document.getElementById("location").value = "";
+    document.getElementById("wasteType").value = "";
+
+    searchCenters();
+}
+
+
+
+/*
+==================================================
+        ENTER KEY SEARCH
+==================================================
+*/
+
+document
+.getElementById("centerName")
+.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+
+        searchCenters();
+
+    }
+
+});
+
+
+document
+.getElementById("location")
+.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+
+        searchCenters();
+
+    }
+
+});
+
+
+
+/*
+==================================================
+        SHOW CENTERS WHEN PAGE LOADS
+==================================================
+*/
+
+searchCenters();
+</script>
+<script src="language.js"></script>
+
+
+
+</body>
+</html>

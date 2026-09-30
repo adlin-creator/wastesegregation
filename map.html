@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Waste Collection Map</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          crossorigin="">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f8f4;
+        }
+
+        /* Header */
+
+        header {
+            background: #168a45;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back {
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        header h2 {
+            font-size: 21px;
+        }
+
+        /* Main */
+
+        .container {
+            padding: 25px 7%;
+        }
+
+        .title {
+            margin-bottom: 20px;
+        }
+
+        .title h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .title p {
+            color: #666;
+        }
+
+        /* Map Card */
+
+        .map-card {
+            background: white;
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 12px;
+        }
+
+        /* Information */
+
+        .info-box {
+            margin-top: 18px;
+            background: #e4f4e9;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .info-box h3 {
+            color: #168a45;
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            line-height: 1.7;
+            color: #444;
+        }
+
+        /* Vehicle Status */
+
+        .status-box {
+            margin-top: 15px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .status {
+            color: #168a45;
+            font-weight: bold;
+        }
+
+        /* Button */
+
+        .button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #168a45;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #106c35;
+        }
+
+        /* Mobile */
+
+        @media(max-width:600px) {
+
+            .container {
+                padding: 20px 5%;
+            }
+
+            header {
+                padding: 15px 5%;
+            }
+
+            #map {
+                height: 400px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Header -->
+
+    <header>
+
+        <span class="back"
+              onclick="goBack()">
+            ←
+        </span>
+
+        <h2>
+            🗺️ Waste Collection Map
+        </h2>
+
+    </header>
+
+
+    <!-- Main -->
+
+    <div class="container">
+
+
+        <div class="title">
+
+            <h1>
+                Collection Vehicle Map
+            </h1>
+
+            <p>
+                View the collection vehicle and its route on the map.
+            </p>
+
+        </div>
+
+
+        <!-- MAP -->
+
+        <div class="map-card">
+
+            <div id="map"></div>
+
+        </div>
+
+
+        <!-- Information -->
+
+        <div class="info-box">
+
+            <h3>
+                🚛 Vehicle Information
+            </h3>
+
+            <p>
+                <b>Vehicle:</b> TN 38 AB 1234
+            </p>
+
+            <p>
+                <b>Type:</b> Waste Collection Van
+            </p>
+
+            <p>
+                <b>Waste:</b> Wet & Dry Waste
+            </p>
+
+        </div>
+
+
+        <!-- Status -->
+
+        <div class="status-box">
+
+            <p>
+                🚛 Vehicle Status:
+                <span class="status">
+                    🟢 ON ROUTE
+                </span>
+            </p>
+
+            <p style="margin-top:8px;">
+                ⏱️ Estimated Arrival:
+                <b id="arrival">
+                    15 mins
+                </b>
+            </p>
+
+        </div>
+
+
+        <button class="button"
+                onclick="trackVehicle()">
+
+            🚛 Track Vehicle
+
+        </button>
+
+
+    </div>
+
+
+    <!-- Leaflet JS -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        crossorigin="">
+    </script>
+
+
+    <script>
+
+
+        /*
+         * Default location - Coimbatore
+         */
+
+        const destination = [
+            11.0168,
+            76.9558
+        ];
+
+
+        /*
+         * Starting location of vehicle
+         */
+
+        const start = [
+            11.0318,
+            76.9408
+        ];
+
+
+        /*
+         * Create Map
+         */
+
+        const map =
+            L.map("map")
+            .setView(destination, 14);
+
+
+        /*
+         * OpenStreetMap
+         */
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom: 19,
+
+                attribution:
+                    '&copy; OpenStreetMap contributors'
+            }
+        ).addTo(map);
+
+
+        /*
+         * User Location
+         */
+
+        const userIcon =
+            L.divIcon({
+
+                html:
+                    '<div style="font-size:32px;">📍</div>',
+
+                className: "",
+
+                iconSize: [40, 40],
+
+                iconAnchor: [20, 20]
+
+            });
+
+
+        L.marker(
+            destination,
+            {
+                icon: userIcon
+            }
+        )
+        .addTo(map)
+        .bindPopup(
+            "📍 Your Location"
+        );
+
+
+        /*
+         * Vehicle Icon
+         */
+
+        const truckIcon =
+            L.divIcon({
+
+                html:
+                    '<div style="font-size:35px;">🚛</div>',
+
+                className: "",
+
+                iconSize: [40, 40],
+
+                iconAnchor: [20, 20]
+
+            });
+
+
+        /*
+         * Vehicle Marker
+         */
+
+        const vehicleMarker =
+            L.marker(
+                start,
+                {
+                    icon: truckIcon
+                }
+            )
+            .addTo(map)
+            .bindPopup(
+                "🚛 Waste Collection Vehicle<br>🟢 ON ROUTE"
+            );
+
+
+        /*
+         * Route
+         */
+
+        const route = [
+
+            start,
+
+            [
+                11.0280,
+                76.9440
+            ],
+
+            [
+                11.0240,
+                76.9480
+            ],
+
+            [
+                11.0200,
+                76.9510
+            ],
+
+            destination
+
+        ];
+
+
+        /*
+         * Draw Route
+         */
+
+        const routeLine =
+            L.polyline(
+                route,
+                {
+                    weight: 5
+                }
+            )
+            .addTo(map);
+
+
+        /*
+         * Fit map to route
+         */
+
+        map.fitBounds(
+            routeLine.getBounds(),
+            {
+                padding: [30, 30]
+            }
+        );
+
+
+        /*
+         * Vehicle Movement
+         */
+
+        let currentPoint = 0;
+
+
+        function moveVehicle() {
+
+
+            if (
+                currentPoint >=
+                route.length - 1
+            ) {
+
+                document
+                .getElementById("arrival")
+                .innerText =
+                    "Arrived";
+
+                return;
+
+            }
+
+
+            const from =
+                route[currentPoint];
+
+
+            const to =
+                route[currentPoint + 1];
+
+
+            let step = 0;
+
+            const totalSteps = 30;
+
+
+            const movement =
+                setInterval(
+                    function() {
+
+
+                        step++;
+
+
+                        const lat =
+                            from[0] +
+                            (to[0] - from[0]) *
+                            (step / totalSteps);
+
+
+                        const lng =
+                            from[1] +
+                            (to[1] - from[1]) *
+                            (step / totalSteps);
+
+
+                        vehicleMarker
+                            .setLatLng(
+                                [lat, lng]
+                            );
+
+
+                        map.panTo(
+                            [lat, lng],
+                            {
+                                animate: true,
+                                duration: 0.2
+                            }
+                        );
+
+
+                        /*
+                         * Update arrival time
+                         */
+
+                        const remaining =
+                            route.length -
+                            currentPoint -
+                            1;
+
+
+                        document
+                        .getElementById("arrival")
+                        .innerText =
+                            (remaining * 3)
+                            + " mins";
+
+
+                        if (
+                            step >= totalSteps
+                        ) {
+
+                            clearInterval(
+                                movement
+                            );
+
+                            currentPoint++;
+
+                            moveVehicle();
+
+                        }
+
+
+                    },
+                    100
+                );
+
+        }
+
+
+        /*
+         * Track Vehicle Button
+         */
+
+        function trackVehicle() {
+
+            currentPoint = 0;
+
+            moveVehicle();
+
+        }
+
+
+        /*
+         * Back Button
+         */
+
+        function goBack() {
+
+            window.location.href =
+                "home.html";
+
+        }
+
+
+    </script>
+    <script src="language.js"></script>
+
+
+</body>
+
+</html>

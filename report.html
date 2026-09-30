@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CleanCity - Report Waste</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f8f4;
+            color: #222;
+        }
+
+        /* Header */
+        header {
+            background: #168a45;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back {
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        header h1 {
+            font-size: 22px;
+        }
+
+        /* Main */
+        .container {
+            width: 90%;
+            max-width: 650px;
+            margin: 25px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 18px;
+            border-radius: 16px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            font-size: 19px;
+            margin-bottom: 15px;
+            color: #168a45;
+        }
+
+        /* Photo Upload */
+        .photo-area {
+            border: 2px dashed #168a45;
+            border-radius: 14px;
+            padding: 25px;
+            text-align: center;
+            background: #f7fbf8;
+        }
+
+        .photo-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .photo-area p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            background: #168a45;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 22px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #photoInput {
+            display: none;
+        }
+
+        #preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Location */
+        .location-box {
+            background: #f3f8f4;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .location-text {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .location-btn {
+            border: 1px solid #168a45;
+            background: white;
+            color: #168a45;
+            padding: 9px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Select */
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        select:focus,
+        textarea:focus {
+            border-color: #168a45;
+        }
+
+        textarea {
+            height: 120px;
+            resize: none;
+        }
+
+        /* Waste Type Buttons */
+        .waste-types {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .waste-option {
+            border: 1px solid #ccc;
+            background: white;
+            padding: 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .waste-option:hover {
+            border-color: #168a45;
+            background: #f3f8f4;
+        }
+
+        .waste-option.selected {
+            border: 2px solid #168a45;
+            background: #e4f4e9;
+        }
+
+        /* AI */
+        .ai-box {
+            background: #e4f4e9;
+            padding: 18px;
+            border-radius: 12px;
+        }
+
+        .ai-box p {
+            color: #555;
+            margin: 7px 0 15px;
+            line-height: 1.5;
+        }
+
+        .ai-btn {
+            background: #168a45;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 22px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .ai-result {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #168a45;
+            display: none;
+        }
+
+        /* Date */
+        .date-box {
+            background: #f3f8f4;
+            padding: 14px;
+            border-radius: 10px;
+            color: #555;
+        }
+
+        /* Submit */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #168a45;
+            color: white;
+            border: none;
+            border-radius: 27px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+
+        .submit-btn:hover {
+            background: #106c36;
+        }
+
+        /* Success */
+        .success {
+            display: none;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .success-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .success h2 {
+            color: #168a45;
+            margin-bottom: 10px;
+        }
+
+        .report-id {
+            background: #e4f4e9;
+            padding: 14px;
+            border-radius: 10px;
+            margin: 18px 0;
+            font-weight: bold;
+            color: #168a45;
+        }
+
+        .home-btn {
+            background: #168a45;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 23px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 92%;
+            }
+
+            .waste-types {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .back {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <button class="back" onclick="goHome()">←</button>
+        <h1>📸 Report Waste</h1>
+    </header>
+
+
+    <div class="container" id="reportPage">
+
+        <!-- Photo -->
+        <div class="card">
+
+            <h2>📷 Upload / Capture Photo</h2>
+
+            <div class="photo-area">
+
+                <div class="photo-icon">📸</div>
+
+                <p>
+                    Take a photo or upload an image of the waste.
+                </p>
+
+                <label for="photoInput" class="upload-btn">
+                    📷 Choose Photo
+                </label>
+
+                <input
+                    type="file"
+                    id="photoInput"
+                    accept="image/*"
+                    capture="environment"
+                >
+
+                <img id="preview" alt="Waste Photo Preview">
+
+            </div>
+
+        </div>
+
+
+        <!-- Location -->
+        <div class="card">
+
+            <h2>📍 Location</h2>
+
+            <div class="location-box">
+
+                <p class="location-text" id="locationText">
+                    📍 Location not selected
+                </p>
+
+                <button
+                    class="location-btn"
+                    onclick="getLocation()">
+                    📍 Use Current Location
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Waste Type -->
+        <div class="card">
+
+            <h2>♻️ Waste Type</h2>
+
+            <div class="waste-types">
+
+                <button
+                    class="waste-option"
+                    onclick="selectWaste(this, 'Wet Waste')">
+                    🟢 Wet Waste
+                </button>
+
+                <button
+                    class="waste-option"
+                    onclick="selectWaste(this, 'Dry Waste')">
+                    🔵 Dry Waste
+                </button>
+
+                <button
+                    class="waste-option"
+                    onclick="selectWaste(this, 'Plastic Waste')">
+                    🟡 Plastic Waste
+                </button>
+
+                <button
+                    class="waste-option"
+                    onclick="selectWaste(this, 'Hazardous Waste')">
+                    🔴 Hazardous Waste
+                </button>
+
+                <button
+                    class="waste-option"
+                    onclick="selectWaste(this, 'E-Waste')">
+                    ⚡ E-Waste
+                </button>
+
+                <button
+                    class="waste-option"
+                    onclick="selectWaste(this, 'Other')">
+                    ❓ Other
+                </button>
+
+            </div>
+
+            <p id="selectedWaste"
+               style="margin-top:12px;color:#168a45;font-weight:bold;">
+            </p>
+
+        </div>
+
+
+        <!-- AI Detection -->
+        <div class="card">
+
+            <h2>🤖 AI Waste Detection</h2>
+
+            <div class="ai-box">
+
+                <p>
+                    Upload a photo and use AI to identify
+                    the type of waste automatically.
+                </p>
+
+                <button
+                    class="ai-btn"
+                    onclick="identifyWaste()">
+                    🤖 Identify Waste with AI
+                </button>
+
+                <p class="ai-result" id="aiResult">
+                    Detected: Plastic Waste
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Problem Type -->
+<label for="problemType">🚨 Problem Type</label>
+
+<select id="problemType">
+    <option value="">Select the problem</option>
+    <option value="Illegal Dumping">Illegal Dumping</option>
+    <option value="Overflowing Dustbin">Overflowing Dustbin</option>
+    <option value="Missed Waste Collection">Missed Waste Collection</option>
+    <option value="Roadside Garbage">Roadside Garbage</option>
+    <option value="Open Waste Burning">Open Waste Burning</option>
+    <option value="Unsegregated Waste">Unsegregated Waste</option>
+    <option value="Other">Other</option>
+</select>
+
+
+<!-- Ward -->
+<label for="ward">📍 Select Your Ward</label>
+
+<select id="ward">
+    <option value="">Select Ward</option>
+    <option value="Ward 1">Ward 1</option>
+    <option value="Ward 2">Ward 2</option>
+    <option value="Ward 3">Ward 3</option>
+    <option value="Ward 4">Ward 4</option>
+    <option value="Ward 5">Ward 5</option>
+    <option value="Ward 6">Ward 6</option>
+    <option value="Ward 7">Ward 7</option>
+    <option value="Ward 8">Ward 8</option>
+    <option value="Ward 9">Ward 9</option>
+    <option value="Ward 10">Ward 10</option>
+    <option value="Ward 11">Ward 11</option>
+    <option value="Ward 12">Ward 12</option>
+</select>
+<!-- Description -->
+<label for="description">📝 Description</label>
+
+<textarea
+    id="description"
+    placeholder="Describe the waste problem..."
+    rows="5"
+    style="width:100%; padding:12px; border:1px solid #ccc;
+           border-radius:10px; resize:vertical;">
+</textarea>
+
+
+        <!-- Date & Time -->
+        <div class="card">
+
+            <h2>🕐 Date & Time</h2>
+
+            <div class="date-box" id="dateTime">
+                Loading date and time...
+            </div>
+
+        </div>
+
+
+        <!-- Submit -->
+        <button
+            class="submit-btn"
+            onclick="submitReport()">
+            🚨 SUBMIT REPORT
+        </button>
+
+    </div>
+
+
+    <!-- Success Message -->
+    <div class="container">
+
+        <div class="success" id="successPage">
+
+            <div class="success-icon">
+                ✅
+            </div>
+
+            <h2>Report Submitted Successfully!</h2>
+
+            <p>
+                Thank you for helping keep our city clean.
+            </p>
+
+            <div class="report-id" id="reportId">
+                Report ID: CLN000000
+            </div>
+
+            <button
+                class="home-btn"
+                onclick="goHome()">
+                🏠 GO TO HOME
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* Photo Preview */
+        document.getElementById("photoInput").addEventListener(
+            "change",
+            function(event) {
+
+                const file = event.target.files[0];
+
+                if (file) {
+
+                    const preview =
+                        document.getElementById("preview");
+
+                    preview.src = URL.createObjectURL(file);
+
+                    preview.style.display = "block";
+                }
+            }
+        );
+
+
+        /* Location */
+        function getLocation() {
+
+            const locationText =
+                document.getElementById("locationText");
+
+            if (navigator.geolocation) {
+
+                locationText.innerHTML =
+                    "📍 Getting your location...";
+
+                navigator.geolocation.getCurrentPosition(
+
+                    function(position) {
+
+                        const lat =
+                            position.coords.latitude.toFixed(5);
+
+                        const lon =
+                            position.coords.longitude.toFixed(5);
+
+                        locationText.innerHTML =
+                            "📍 Location captured<br>" +
+                            "Latitude: " + lat +
+                            "<br>Longitude: " + lon;
+                    },
+
+                    function() {
+
+                        locationText.innerHTML =
+                            "📍 Unable to get location. Please enter it manually.";
+
+                    }
+                );
+
+            } else {
+
+                locationText.innerHTML =
+                    "📍 Location is not supported by this browser.";
+
+            }
+        }
+
+
+        /* Waste Type */
+        let selectedWasteType = "";
+
+        function selectWaste(button, type) {
+
+            const buttons =
+                document.querySelectorAll(".waste-option");
+
+            buttons.forEach(function(btn) {
+                btn.classList.remove("selected");
+            });
+
+            button.classList.add("selected");
+
+            selectedWasteType = type;
+
+            document.getElementById("selectedWaste").innerText =
+                "Selected: " + type;
+        }
+
+
+        /* AI Waste Detection Demo */
+function identifyWaste() {
+
+    const photo =
+        document.getElementById("photoInput").files[0];
+
+    if (!photo) {
+        alert("Please upload a waste photo first.");
+        return;
+    }
+
+    /* If user already selected a waste type,
+       keep that selection */
+    if (selectedWasteType !== "") {
+
+        const aiResult =
+            document.getElementById("aiResult");
+
+        aiResult.style.display = "block";
+
+        aiResult.innerText =
+            "🤖 AI Result: " + selectedWasteType + " detected";
+
+        return;
+    }
+
+    /* Demo AI result when no manual selection is made */
+    const wasteTypes = [
+        "Wet Waste",
+        "Dry Waste",
+        "Plastic Waste",
+        "E-Waste",
+        "Hazardous Waste"
+    ];
+
+    const randomIndex =
+        Math.floor(Math.random() * wasteTypes.length);
+
+    const detectedWaste =
+        wasteTypes[randomIndex];
+
+    const aiResult =
+        document.getElementById("aiResult");
+
+    aiResult.style.display = "block";
+
+    aiResult.innerText =
+        "🤖 AI Result: " + detectedWaste + " detected";
+
+    const buttons =
+        document.querySelectorAll(".waste-option");
+
+    buttons.forEach(function(button) {
+
+        button.classList.remove("selected");
+
+        if (button.innerText.includes(detectedWaste)) {
+            button.classList.add("selected");
+        }
+    });
+
+    selectedWasteType = detectedWaste;
+
+    document.getElementById("selectedWaste").innerText =
+        "Selected: " + detectedWaste;
+}
+        /* Date & Time */
+        function updateDateTime() {
+
+            const now = new Date();
+
+            document.getElementById("dateTime").innerText =
+                now.toLocaleString();
+
+        }
+
+        updateDateTime();
+
+
+        /* Submit Report */
+        async function submitReport() {
+
+            const photo =
+                document.getElementById("photoInput").files[0];
+
+            const problem =
+                document.getElementById("problemType").value;
+                const ward =
+    document.getElementById("ward").value;
+
+            const description =
+                document.getElementById("description").value.trim();
+
+
+            if (!photo) {
+
+                alert("Please upload or capture a photo.");
+
+                return;
+            }
+
+
+            if (selectedWasteType === "") {
+
+                alert("Please select the waste type.");
+
+                return;
+            }
+
+
+            if (problem === "") {
+
+                alert("Please select the problem type.");
+
+                return;
+            }
+            if (ward === "") {
+
+    alert("Please select your ward.");
+
+    return;
+}
+
+
+            if (description === "") {
+
+                alert("Please enter a description.");
+
+                return;
+            }
+
+
+            /* Generate Report ID */
+            const randomNumber =
+                Math.floor(100000 + Math.random() * 900000);
+
+            const reportID =
+                "CLN" + randomNumber;
+
+
+            /* Get logged-in user */
+            const user =
+                JSON.parse(localStorage.getItem("cleanCityUser"));
+
+            const userEmail =
+                user ? user.email : null;
+
+
+            /* Get location */
+            let latitude = null;
+            let longitude = null;
+
+
+            if (navigator.geolocation) {
+
+                try {
+
+                    const position =
+                        await new Promise((resolve, reject) => {
+
+                            navigator.geolocation.getCurrentPosition(
+                                resolve,
+                                reject,
+                                {
+                                    enableHighAccuracy: true,
+                                    timeout: 5000
+                                }
+                            );
+
+                        });
+
+                    latitude =
+                        position.coords.latitude;
+
+                    longitude =
+                        position.coords.longitude;
+
+                } catch (error) {
+
+                    console.log("Location not available.");
+
+                }
+            }
+
+
+            /* Current date and time */
+            const reportDate =
+                new Date().toISOString().slice(0, 19).replace("T", " ");
+
+
+            /* Send report to backend */
+            try {
+
+                const response =
+                    await fetch("http://localhost:3001/reports", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            report_id: reportID,
+                            user_email: userEmail,
+                            waste_type: selectedWasteType,
+                            problem_type: problem,
+                            ward:ward,
+                            description: description,
+                            latitude: latitude,
+                            longitude: longitude,
+                            report_date: reportDate
+
+                        })
+
+                    });
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    alert(
+                        data.message ||
+                        "Report submission failed."
+                    );
+
+                    return;
+                }
+
+
+                /* Show Report ID */
+                document.getElementById("reportId").innerText =
+                    "Report ID: " + reportID;
+
+
+                /* Hide Report Form */
+                document.getElementById("reportPage").style.display =
+                    "none";
+
+
+                /* Show Success */
+                document.getElementById("successPage").style.display =
+                    "block";
+
+
+                window.scrollTo(0, 0);
+
+
+            } catch (error) {
+
+                console.error(
+                    "Report submission error:",
+                    error
+                );
+
+                alert(
+                    "Unable to connect to the server. " +
+                    "Please make sure the backend is running."
+                );
+
+            }
+
+        }
+
+        /* Home */
+        function goHome() {
+    window.location.assign("./home.html");
+}
+
+    </script>
+    <script src="language.js"></script>
+    
+</button>
+
+</body>
+</html>

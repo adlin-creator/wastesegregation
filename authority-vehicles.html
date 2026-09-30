@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Vehicle Management - CleanCity</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f3f8f4;
+    color: #222;
+}
+
+/* HEADER */
+
+.header {
+    background: #16833a;
+    color: white;
+    padding: 22px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header p {
+    margin: 7px 0 0;
+    font-size: 14px;
+}
+
+/* CONTAINER */
+
+.container {
+    max-width: 700px;
+    margin: 25px auto;
+    padding: 15px;
+}
+
+/* CARD */
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    color: #16833a;
+    margin-top: 0;
+}
+
+/* INPUT */
+
+label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+/* BUTTON */
+
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #16833a;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #126d30;
+}
+
+/* MESSAGE */
+
+.message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    display: none;
+}
+
+/* VEHICLE */
+
+.vehicle {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.vehicle h3 {
+    margin-top: 0;
+    color: #16833a;
+}
+
+.vehicle p {
+    margin: 7px 0;
+}
+
+.back {
+    background: #555;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>🚛 Vehicle Management</h1>
+
+    <p>Authority Portal</p>
+
+</div>
+
+
+<div class="container">
+    <button onclick="window.location.href='authority-vehicles.html'">
+    🚛 Vehicle Management
+</button>
+
+
+    <!-- ADD VEHICLE -->
+
+    <div class="card">
+
+        <h2>Add Collection Vehicle</h2>
+
+        <label>Vehicle Name</label>
+
+        <input
+            type="text"
+            id="vehicleName"
+            placeholder="Enter actual vehicle name"
+        >
+
+
+        <label>Vehicle Number</label>
+
+        <input
+            type="text"
+            id="vehicleNumber"
+            placeholder="Enter actual vehicle number"
+        >
+
+
+        <label>Route</label>
+
+        <input
+            type="text"
+            id="route"
+            placeholder="Enter actual collection route"
+        >
+
+
+        <label>Location</label>
+
+        <input
+            type="text"
+            id="location"
+            placeholder="Enter current/assigned location"
+        >
+
+
+        <label>Ward</label>
+
+        <input
+            type="text"
+            id="ward"
+            placeholder="Enter ward number"
+        >
+
+
+        <label>Status</label>
+
+        <select id="status">
+
+            <option value="">Select status</option>
+
+            <option value="Collection Pending">
+                Collection Pending
+            </option>
+
+            <option value="On the Way">
+                On the Way
+            </option>
+
+            <option value="Collecting">
+                Collecting
+            </option>
+
+            <option value="Completed">
+                Completed
+            </option>
+
+        </select>
+
+
+        <label>Collection Time</label>
+
+        <input
+            type="text"
+            id="collectionTime"
+            placeholder="Example: 7:00 AM - 9:00 AM"
+        >
+
+
+        <label>Latitude (optional)</label>
+
+        <input
+            type="number"
+            step="any"
+            id="latitude"
+            placeholder="Actual latitude"
+        >
+
+
+        <label>Longitude (optional)</label>
+
+        <input
+            type="number"
+            step="any"
+            id="longitude"
+            placeholder="Actual longitude"
+        >
+
+
+        <button onclick="addVehicle()">
+            Add Vehicle
+        </button>
+
+
+        <div id="message" class="message"></div>
+
+    </div>
+
+
+    <!-- VEHICLES -->
+
+    <div class="card">
+
+        <h2>Registered Collection Vehicles</h2>
+
+        <div id="vehicleList">
+
+            No vehicles loaded.
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="back"
+        onclick="window.location.href='authority-home.html'">
+
+        ← Back to Authority Home
+
+    </button>
+
+</div>
+
+
+<script>
+
+const API = "http://localhost:3001";
+
+
+// ==========================================
+// ADD VEHICLE
+// ==========================================
+
+async function addVehicle() {
+
+    const vehicleName =
+        document.getElementById("vehicleName").value.trim();
+
+    const vehicleNumber =
+        document.getElementById("vehicleNumber").value.trim();
+
+    const route =
+        document.getElementById("route").value.trim();
+
+    const location =
+        document.getElementById("location").value.trim();
+
+    const ward =
+        document.getElementById("ward").value.trim();
+
+    const status =
+        document.getElementById("status").value;
+
+    const collectionTime =
+        document.getElementById("collectionTime").value.trim();
+
+    const latitude =
+        document.getElementById("latitude").value;
+
+    const longitude =
+        document.getElementById("longitude").value;
+
+
+    if (
+        !vehicleName ||
+        !vehicleNumber ||
+        !route ||
+        !location ||
+        !ward ||
+        !status ||
+        !collectionTime
+    ) {
+
+        showMessage(
+            "Please fill all required fields.",
+            false
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            `${API}/collection-vehicles`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    vehicle_name: vehicleName,
+
+                    vehicle_number: vehicleNumber,
+
+                    route: route,
+
+                    location: location,
+
+                    status: status,
+
+                    ward: ward,
+
+                    latitude: latitude || null,
+
+                    longitude: longitude || null,
+
+                    collection_time: collectionTime
+
+                })
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+            showMessage(
+                data.message || "Failed to add vehicle.",
+                false
+            );
+
+            return;
+        }
+
+
+        showMessage(
+            "Vehicle added successfully.",
+            true
+        );
+
+
+        clearForm();
+
+        loadVehicles();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "Backend connection failed.",
+            false
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// LOAD VEHICLES
+// ==========================================
+
+async function loadVehicles() {
+
+    /*
+       This page does not use fake records.
+       Vehicles are displayed only after they
+       exist in the MySQL database.
+    */
+
+    try {
+
+        const response = await fetch(
+            `${API}/all-collection-vehicles`
+        );
+
+
+        if (!response.ok) {
+
+            document.getElementById("vehicleList").innerHTML =
+                "No vehicle records available.";
+
+            return;
+        }
+
+
+        const vehicles = await response.json();
+
+        displayVehicles(vehicles);
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById("vehicleList").innerHTML =
+            "Unable to connect to backend.";
+
+    }
+
+}
+
+
+// ==========================================
+// DISPLAY VEHICLES
+// ==========================================
+
+function displayVehicles(vehicles) {
+
+    const list =
+        document.getElementById("vehicleList");
+
+
+    if (!vehicles || vehicles.length === 0) {
+
+        list.innerHTML =
+            "<p>No vehicle records available.</p>";
+
+        return;
+    }
+
+
+    list.innerHTML = "";
+
+
+    vehicles.forEach(vehicle => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "vehicle";
+
+
+        div.innerHTML = `
+
+            <h3>🚛 ${escapeHTML(vehicle.vehicle_name)}</h3>
+
+            <p>
+                <strong>Vehicle Number:</strong>
+                ${escapeHTML(vehicle.vehicle_number)}
+            </p>
+
+            <p>
+                <strong>Route:</strong>
+                ${escapeHTML(vehicle.route)}
+            </p>
+
+            <p>
+                <strong>Location:</strong>
+                ${escapeHTML(vehicle.location)}
+            </p>
+
+            <p>
+                <strong>Ward:</strong>
+                ${escapeHTML(vehicle.ward)}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                ${escapeHTML(vehicle.status)}
+            </p>
+
+            <p>
+                <strong>Collection Time:</strong>
+                ${escapeHTML(vehicle.collection_time)}
+            </p>
+
+        `;
+
+
+        list.appendChild(div);
+
+    });
+
+}
+
+
+// ==========================================
+// CLEAR FORM
+// ==========================================
+
+function clearForm() {
+
+    document.getElementById("vehicleName").value = "";
+
+    document.getElementById("vehicleNumber").value = "";
+
+    document.getElementById("route").value = "";
+
+    document.getElementById("location").value = "";
+
+    document.getElementById("ward").value = "";
+
+    document.getElementById("status").value = "";
+
+    document.getElementById("collectionTime").value = "";
+
+    document.getElementById("latitude").value = "";
+
+    document.getElementById("longitude").value = "";
+
+}
+
+
+// ==========================================
+// MESSAGE
+// ==========================================
+
+function showMessage(text, success) {
+
+    const message =
+        document.getElementById("message");
+
+    message.style.display = "block";
+
+    message.textContent = text;
+
+    message.style.background =
+        success ? "#e4f4e9" : "#ffe8e8";
+
+    message.style.color =
+        success ? "#16833a" : "#b00020";
+
+}
+
+
+// ==========================================
+// SECURITY
+// ==========================================
+
+function escapeHTML(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+loadVehicles();
+
+</script>
+
+</body>
+
+</html>

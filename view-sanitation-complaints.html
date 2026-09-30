@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sanitation Complaints - CleanCity</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f8f4;
+        }
+
+        header {
+            background: #16823b;
+            color: white;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #16823b;
+        }
+
+        .complaint {
+            background: white;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+
+        .complaint h3 {
+            margin-top: 0;
+            color: #16823b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #16823b;
+            color: white;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .back {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🧹 CleanCity</h1>
+    <p>Sanitation Complaints</p>
+</header>
+
+<div class="container">
+
+    <h2>🧹 Sanitation Complaints</h2>
+
+    <div id="complaintsContainer">
+
+    <p style="text-align:center;color:#666;">
+        Loading sanitation complaints...
+    </p>
+
+</div>
+
+    <button class="back" onclick="goBack()">
+        ← Back to Sanitation Department
+    </button>
+
+</div>
+
+<script>
+function goBack() {
+    window.location.href = "sanitation-dashboard.html";
+}
+async function loadSanitationComplaints() {
+
+    const container =
+        document.getElementById("complaintsContainer");
+
+    try {
+
+        const response =
+            await fetch("http://localhost:3001/reports");
+
+        const reports =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                reports.message ||
+                "Unable to load complaints"
+            );
+
+        }
+
+
+        /* Show only sanitation-related complaints */
+
+        const sanitationReports =
+            reports.filter(function(report) {
+
+                const problem =
+                    report.problem_type.toLowerCase();
+
+                return (
+                    problem.includes("dumping") ||
+                    problem.includes("overflowing") ||
+                    problem.includes("collection") ||
+                    problem.includes("roadside") ||
+                    problem.includes("burning") ||
+                    problem.includes("unsegregated")
+                );
+
+            });
+
+
+        if (sanitationReports.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="complaint">
+
+                    <h3>
+                        No Sanitation Complaints
+                    </h3>
+
+                    <p>
+                        No sanitation complaints have been
+                        submitted by citizens yet.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        sanitationReports.forEach(function(report) {
+
+            let statusIcon = "🟡";
+
+
+            if (report.status === "Assigned") {
+                statusIcon = "🟠";
+            }
+
+            if (report.status === "In Progress") {
+                statusIcon = "🔵";
+            }
+
+            if (report.status === "Resolved") {
+                statusIcon = "🟢";
+            }
+
+
+            container.innerHTML += `
+
+                <div class="complaint">
+
+                    <h3>
+                        Complaint #${report.report_id}
+                    </h3>
+
+                    <p>
+                        <b>Issue:</b>
+                        ${report.problem_type}
+                    </p>
+
+                    <p>
+                        <b>Waste Type:</b>
+                        ${report.waste_type}
+                    </p>
+
+                    <p>
+                        <b>Description:</b>
+                        ${report.description}
+                    </p>
+
+                    <p>
+                        <b>Location:</b>
+                        ${
+                            report.latitude !== null
+                            ? report.latitude +
+                              ", " +
+                              report.longitude
+                            : "Location not available"
+                        }
+                    </p>
+
+                    <p>
+                        <b>Reported By:</b>
+                        ${report.user_email || "Citizen"}
+                    </p>
+
+                    <p>
+                        <b>Date:</b>
+                        ${new Date(
+                            report.report_date
+                        ).toLocaleString()}
+                    </p>
+
+                    <span class="status">
+
+                        ${statusIcon}
+                        ${report.status}
+
+                    </span>
+
+                </div>
+
+            `;
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Sanitation complaint error:",
+            error
+        );
+
+        container.innerHTML = `
+
+            <div class="complaint">
+
+                <h3>
+                    ⚠️ Unable to Load Complaints
+                </h3>
+
+                <p>
+                    Please make sure the CleanCity
+                    backend is running.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* Load complaints when page opens */
+loadSanitationComplaints();
+</script>
+
+</body>
+</html>

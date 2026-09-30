@@ -1,0 +1,336 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CleanCity - Register</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        background: #f3f8f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .register-container {
+        width: 90%;
+        max-width: 400px;
+        background: white;
+        padding: 35px 30px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .logo-icon {
+        font-size: 50px;
+    }
+
+    .logo h1 {
+        color: #168a45;
+        font-size: 30px;
+        margin-top: 5px;
+    }
+
+    .logo p {
+        color: #666;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .form-group input:focus {
+        border-color: #168a45;
+    }
+
+    .password-box {
+        position: relative;
+    }
+
+    .password-box input {
+        padding-right: 45px;
+    }
+
+    .show-password {
+        position: absolute;
+        right: 13px;
+        top: 13px;
+        cursor: pointer;
+    }
+
+    .register-btn {
+        width: 100%;
+        padding: 14px;
+        background: #168a45;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .register-btn:hover {
+        background: #106c36;
+    }
+
+    .message {
+        font-size: 13px;
+        text-align: center;
+        margin-bottom: 12px;
+        display: none;
+    }
+
+    .success-message {
+        color: #168a45;
+    }
+
+    .error-message {
+        color: #d93025;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .login-link a {
+        color: #168a45;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 25px;
+        color: #888;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+</style>
+
+</head><body><div class="register-container">
+
+    <!-- Logo -->
+    <div class="logo">
+        <div class="logo-icon">🌱</div>
+        <h1>CleanCity</h1>
+        <p>Create your account and help keep our city clean.</p>
+    </div>
+
+    <!-- Registration Form -->
+    <form id="registerForm">
+
+        <!-- Name -->
+        <div class="form-group">
+            <label for="name">👤 Full Name</label>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Enter your name"
+                required
+            >
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">📧 Email</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                required
+            >
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">🔒 Password</label>
+
+            <div class="password-box">
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Create your password"
+                    required
+                >
+
+                <span
+                    class="show-password"
+                    onclick="togglePassword()">
+                    👁️
+                </span>
+
+            </div>
+        </div>
+
+        <!-- Message -->
+        <p class="message" id="message"></p>
+
+        <!-- Register -->
+        <button type="submit" class="register-btn">
+            CREATE ACCOUNT
+        </button>
+
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+        Already have an account?
+        <a href="login.html">LOGIN</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>🌱 CleanCity Waste Management</p>
+        <p>Making our cities cleaner, together.</p>
+    </div>
+
+</div>
+
+<script>
+
+    // REGISTRATION
+    document.getElementById("registerForm").addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        const message = document.getElementById("message");
+
+        message.style.display = "none";
+
+        if (name === "" || email === "" || password === "") {
+
+            message.textContent =
+                "Please fill in all the fields.";
+
+            message.className =
+                "message error-message";
+
+            message.style.display = "block";
+
+            return;
+        }
+
+        try {
+
+            const response = await fetch("http://localhost:3001/register", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password
+                })
+
+            });
+
+            const data = await response.json();
+
+           if (response.ok) {
+
+    message.textContent =
+        "Account created successfully! 🌱";
+
+    message.className =
+        "message success-message";
+
+    message.style.display = "block";
+
+    setTimeout(function() {
+        window.location.href = "success.html";
+    }, 1500);
+
+}
+            else {
+
+                message.textContent =
+                    data.message || "Registration failed.";
+
+                message.className =
+                    "message error-message";
+
+                message.style.display = "block";
+            }
+
+        } catch (error) {
+
+            console.error("Registration error:", error);
+
+            message.textContent =
+                "Unable to connect to the server.";
+
+            message.className =
+                "message error-message";
+
+            message.style.display = "block";
+        }
+
+    });
+
+
+    // SHOW / HIDE PASSWORD
+    function togglePassword() {
+
+        const password =
+            document.getElementById("password");
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+        } else {
+
+            password.type = "password";
+
+        }
+    }
+
+</script>
+
+</body>
+</html>

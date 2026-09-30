@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Ward Officer - CleanCity</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f3f8f4;
+}
+
+header {
+    background: #16833a;
+    color: white;
+    padding: 20px;
+    border-radius: 0 0 20px 20px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+    padding: 20px;
+}
+
+.back {
+    border: none;
+    background: none;
+    color: #16833a;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.box h2 {
+    color: #16833a;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap: 15px;
+}
+
+.stat {
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.number {
+    font-size: 30px;
+    color: #16833a;
+    font-weight: bold;
+}
+
+.complaint {
+    background: #f3f8f4;
+    padding: 15px;
+    margin-top: 12px;
+    border-radius: 12px;
+}
+
+.assign {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    background: #16833a;
+    color: white;
+    border-radius: 9px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>📍 CleanCity</h1>
+
+<p>Ward Officer Dashboard</p>
+
+</header>
+
+
+<div class="container">
+
+<button class="back"
+        onclick="goBack()">
+
+← Back to Authority Home
+
+</button>
+
+
+<div class="box">
+
+<h2>📍 Ward Management</h2>
+<p>Monitor complaints and cleanliness activities within your ward.</p>
+
+<label for="wardSelect"><strong>Select Ward</strong></label>
+
+<select id="wardSelect" onchange="loadWardComplaints()"
+    style="width:100%; padding:12px; margin-top:10px;
+    border:1px solid #ccc; border-radius:9px;">
+
+    <option value="">Select Ward</option>
+    <option value="Ward 1">Ward 1</option>
+    <option value="Ward 2">Ward 2</option>
+    <option value="Ward 3">Ward 3</option>
+    <option value="Ward 4">Ward 4</option>
+    <option value="Ward 5">Ward 5</option>
+    <option value="Ward 6">Ward 6</option>
+    <option value="Ward 7">Ward 7</option>
+    <option value="Ward 8">Ward 8</option>
+    <option value="Ward 9">Ward 9</option>
+    <option value="Ward 10">Ward 10</option>
+    <option value="Ward 11">Ward 11</option>
+    <option value="Ward 12">Ward 12</option>
+
+</select>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<div class="number" id="totalComplaints">0</div>
+<p>Total Complaints</p>
+</div>
+
+<div class="stat">
+<div class="number" id="pendingComplaints">0</div>
+<p>Pending</p>
+</div>
+
+<div class="stat">
+<div class="number" id="progressComplaints">0</div>
+<p>In Progress</p>
+</div>
+
+<div class="stat">
+<div class="number" id="resolvedComplaints">0</div>
+<p>Resolved</p>
+</div>
+
+</div>
+
+
+<div class="box">
+
+<h2>📋 Ward Complaints</h2>
+
+
+<div id="wardComplaintsContainer">
+
+    <p style="text-align:center;color:#666;">
+        Loading ward complaints...
+    </p>
+
+</div>
+<div class="box">
+
+<h2>🗺️ Ward Location</h2>
+
+<p>
+Complaint locations can be monitored
+through the CleanCity map.
+</p>
+
+<button class="assign"
+        onclick="viewWardMap()">
+
+View Ward Map
+
+</button>
+<div id="wardMap"
+     style="
+        width:100%;
+        height:400px;
+        margin-top:20px;
+        border-radius:12px;
+        overflow:hidden;
+        display:none;
+     ">
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+function goBack() {
+
+    window.location.href =
+        "authority-home.html";
+
+}
+
+
+async function assignComplaint(reportId, button) {
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/reports/" +
+            reportId +
+            "/status",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: "Assigned"
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Unable to assign complaint.");
+            return;
+        }
+
+        button.innerHTML = "✓ Assigned";
+        button.style.background = "#555";
+        button.disabled = true;
+
+        alert("Complaint assigned to Sanitation Department! 🌱");
+
+        loadWardComplaints();
+
+    } catch (error) {
+
+        console.error("Assignment error:", error);
+
+        alert(
+            "Unable to connect to the backend. " +
+            "Please make sure the server is running."
+        );
+    }
+}
+async function loadWardComplaints() {
+
+    const selectedWard =
+        document.getElementById("wardSelect").value;
+
+    const container =
+        document.getElementById("wardComplaintsContainer");
+
+    if (selectedWard === "") {
+
+        document.getElementById("totalComplaints").innerText = "0";
+        document.getElementById("pendingComplaints").innerText = "0";
+        document.getElementById("progressComplaints").innerText = "0";
+        document.getElementById("resolvedComplaints").innerText = "0";
+
+        container.innerHTML = `
+            <div class="complaint">
+                <strong>📍 Select a Ward</strong>
+                <p>Please select a ward to view complaints.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    try {
+
+        // Get all reports
+        const response =
+    await fetch("http://127.0.0.1:3001/reports");
+        if (!response.ok) {
+            throw new Error("Unable to connect to backend");
+        }
+
+        const reports =
+            await response.json();
+
+        // Filter reports by selected ward
+        const wardReports =
+            reports.filter(function(report) {
+
+                return report.ward === selectedWard;
+
+            });
+
+
+        // Count statuses
+        const pending =
+            wardReports.filter(function(report) {
+                return report.status === "Pending";
+            }).length;
+
+        const progress =
+            wardReports.filter(function(report) {
+                return report.status === "In Progress";
+            }).length;
+
+        const resolved =
+            wardReports.filter(function(report) {
+                return report.status === "Resolved";
+            }).length;
+
+
+        // Update statistics
+        document.getElementById("totalComplaints").innerText =
+            wardReports.length;
+
+        document.getElementById("pendingComplaints").innerText =
+            pending;
+
+        document.getElementById("progressComplaints").innerText =
+            progress;
+
+        document.getElementById("resolvedComplaints").innerText =
+            resolved;
+
+
+        // No complaints
+        if (wardReports.length === 0) {
+
+            container.innerHTML = `
+                <div class="complaint">
+
+                    <strong>📋 No Complaints</strong>
+
+                    <p>
+                        No complaints have been submitted
+                        for ${selectedWard}.
+                    </p>
+
+                </div>
+            `;
+
+            return;
+        }
+
+
+        // Clear old complaints
+        container.innerHTML = "";
+
+
+        // Display selected ward complaints
+        wardReports.forEach(function(report) {
+
+            let statusIcon = "🟡";
+
+            if (report.status === "Assigned") {
+                statusIcon = "🟠";
+            }
+
+            if (report.status === "In Progress") {
+                statusIcon = "🔵";
+            }
+
+            if (report.status === "Resolved") {
+                statusIcon = "🟢";
+            }
+
+
+            let location = "Location not available";
+
+            if (
+                report.latitude !== null &&
+                report.longitude !== null
+            ) {
+                location =
+                    report.latitude +
+                    ", " +
+                    report.longitude;
+            }
+
+
+            container.innerHTML += `
+
+                <div class="complaint">
+
+                    <strong>
+                        Complaint #${report.report_id}
+                    </strong>
+
+                    <p>
+                        ${report.description}
+                    </p>
+
+                    📍 ${location}
+
+                    <br><br>
+
+                    <strong>Ward:</strong>
+                    ${report.ward}
+
+                    <br>
+
+                    <strong>Status:</strong>
+                    ${statusIcon}
+                    ${report.status}
+
+                    ${report.status === "Pending" ? `
+    <button
+        class="assign"
+        onclick="assignComplaint('${report.report_id}', this)">
+        Assign to Sanitation Department
+    </button>
+` : `
+    <button
+        class="assign"
+        disabled
+        style="background:#888; cursor:not-allowed;">
+        ✓ ${report.status}
+    </button>
+`}
+
+                </div>
+
+            `;
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Ward complaints error:",
+            error
+        );
+
+        container.innerHTML = `
+
+            <div class="complaint">
+
+                <strong>
+                    ⚠️ Unable to Load Complaints
+                </strong>
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+/* Load ward complaints */
+loadWardComplaints();
+async function viewWardMap() {
+
+    const selectedWard =
+        document.getElementById("wardSelect").value;
+
+    if (selectedWard === "") {
+
+        alert("Please select a ward first.");
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch("http://localhost:3001/reports");
+
+        if (!response.ok) {
+            throw new Error("Unable to load complaints");
+        }
+
+        const reports =
+            await response.json();
+
+        const wardReports =
+            reports.filter(function(report) {
+
+                return report.ward === selectedWard;
+
+            });
+
+        const locationReports =
+            wardReports.filter(function(report) {
+
+                return (
+                    report.latitude !== null &&
+                    report.longitude !== null
+                );
+
+            });
+
+        if (locationReports.length === 0) {
+
+            alert(
+                "No complaint locations are available for " +
+                selectedWard +
+                "."
+            );
+
+            return;
+        }
+
+        const mapElement =
+            document.getElementById("wardMap");
+
+        mapElement.style.display = "block";
+
+        // Remove previous map if it exists
+        if (window.wardMapInstance) {
+            window.wardMapInstance.remove();
+        }
+
+        const firstReport =
+            locationReports[0];
+
+        window.wardMapInstance =
+            L.map("wardMap").setView(
+                [
+                    Number(firstReport.latitude),
+                    Number(firstReport.longitude)
+                ],
+                14
+            );
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution:
+                    "&copy; OpenStreetMap contributors"
+            }
+        ).addTo(window.wardMapInstance);
+
+        const mapBounds = [];
+
+        locationReports.forEach(function(report) {
+
+            const latitude =
+                Number(report.latitude);
+
+            const longitude =
+                Number(report.longitude);
+
+            mapBounds.push([
+                latitude,
+                longitude
+            ]);
+
+            L.marker([
+                latitude,
+                longitude
+            ])
+            .addTo(window.wardMapInstance)
+            .bindPopup(`
+                <strong>
+                    Complaint #${report.report_id}
+                </strong>
+                <br>
+                Ward: ${report.ward}
+                <br>
+                Status: ${report.status}
+                <br>
+                ${report.description}
+            `);
+
+        });
+
+        if (mapBounds.length > 1) {
+
+            window.wardMapInstance.fitBounds(
+                mapBounds,
+                {
+                    padding: [30, 30]
+                }
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Ward map error:",
+            error
+        );
+
+        alert(
+            "Unable to load the ward map. " +
+            "Please make sure the backend is running."
+        );
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

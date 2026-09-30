@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CleanCity - Authority Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f8f4;
+        }
+
+        /* HEADER */
+
+        header {
+            background: #16833a;
+            color: white;
+            padding: 20px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            font-size: 14px;
+        }
+
+        /* MAIN CONTAINER */
+
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* WELCOME */
+
+        .welcome {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .welcome h2 {
+            margin-top: 0;
+            color: #16833a;
+        }
+
+        .welcome p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* GRID */
+
+        .grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(160px, 1fr));
+
+            gap: 15px;
+        }
+
+        /* CARDS */
+
+        .card {
+            background: white;
+
+            padding: 22px 15px;
+
+            border-radius: 18px;
+
+            text-align: center;
+
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.08);
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 6px 15px rgba(0,0,0,0.12);
+        }
+
+        .icon {
+            font-size: 42px;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px;
+
+            color: #16833a;
+
+            font-size: 17px;
+        }
+
+        .card p {
+            color: #666;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+        /* COMPLAINT STATISTICS */
+
+.stat-box {
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    text-align: center;
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,0.08);
+}
+
+.stat-box h3 {
+    margin: 0 0 10px;
+    color: #16833a;
+    font-size: 15px;
+}
+
+.stat-number {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+        /* COMPLAINT SECTION */
+
+        .reports {
+            margin-top: 20px;
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .reports h2 {
+            margin-top: 0;
+
+            color: #16833a;
+        }
+
+        .reports p {
+            color: #666;
+
+            line-height: 1.5;
+        }
+
+        .reports button {
+            background: #16833a;
+
+            color: white;
+
+            border: none;
+
+            padding: 13px 20px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            margin-top: 8px;
+        }
+
+        .reports button:hover {
+            background: #10662d;
+        }
+
+        /* LOGOUT */
+
+        .logout {
+            margin-top: 25px;
+
+            width: 100%;
+
+            padding: 13px;
+
+            background: #d9534f;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .logout:hover {
+            background: #c9302c;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <h1>🏛️ CleanCity</h1>
+
+    <p id="authorityName">
+        Authority Dashboard
+    </p>
+
+</header>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+
+    <!-- WELCOME -->
+
+    <div class="welcome">
+
+        <h2>Welcome 👋</h2>
+
+        <p>
+            Manage waste complaints, monitor
+            cleanliness activities and coordinate
+            with different departments.
+        </p>
+
+    </div>
+
+
+
+    <!-- AUTHORITY OPTIONS -->
+
+    <div class="grid">
+
+
+        <!-- MUNICIPAL CORPORATION -->
+
+        <div class="card"
+             onclick="goToPage('municipal-dashboard.html')">
+
+            <div class="icon">
+                🏛️
+            </div>
+
+            <h3>
+                Municipal Corporation
+            </h3>
+
+            <p>
+                Monitor overall city
+                waste management
+            </p>
+
+        </div>
+
+
+
+        <!-- SANITATION DEPARTMENT -->
+
+        <div class="card"
+             onclick="goToPage('sanitation-dashboard.html')">
+
+            <div class="icon">
+                🧹
+            </div>
+
+            <h3>
+                Sanitation Department
+            </h3>
+
+            <p>
+                Manage cleaning and
+                sanitation complaints
+            </p>
+
+        </div>
+
+
+
+        <!-- WASTE MANAGEMENT -->
+
+        <div class="card"
+             onclick="goToPage('waste-management.html')">
+
+            <div class="icon">
+                ♻️
+            </div>
+
+            <h3>
+                Waste Management Team
+            </h3>
+
+            <p>
+                Manage waste collection
+                and processing
+            </p>
+
+        </div>
+
+
+
+        <!-- SANITARY INSPECTOR -->
+
+        <div class="card"
+             onclick="goToPage('inspector-dashboard.html')">
+
+            <div class="icon">
+                👮
+            </div>
+
+            <h3>
+                Sanitary Inspector
+            </h3>
+
+            <p>
+                Inspect and verify
+                reported issues
+            </p>
+
+        </div>
+
+
+
+        <!-- WARD OFFICER -->
+
+        <div class="card"
+             onclick="goToPage('ward-dashboard.html')">
+
+            <div class="icon">
+                📍
+            </div>
+
+            <h3>
+                Ward Officer
+            </h3>
+
+            <p>
+                Manage ward-level
+                complaints
+            </p>
+
+        </div>
+
+
+
+       
+
+
+    </div>
+    <!-- COMPLAINT STATISTICS -->
+
+    <div class="reports">
+
+        <h2>
+            📊 Complaint Status
+        </h2>
+
+        <div class="grid">
+
+            <div class="stat-box">
+                <h3>🟡 Pending</h3>
+                <div class="stat-number"
+                     id="pendingCount">
+                    0
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <h3>🟠 Assigned</h3>
+                <div class="stat-number"
+                     id="assignedCount">
+                    0
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <h3>🔵 In Progress</h3>
+                <div class="stat-number"
+                     id="progressCount">
+                    0
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <h3>🟢 Resolved</h3>
+                <div class="stat-number"
+                     id="resolvedCount">
+                    0
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <h3>🔴 Rejected</h3>
+                <div class="stat-number"
+                     id="rejectedCount">
+                    0
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- COMPLAINT MONITORING -->
+
+    <div class="reports">
+
+        <h2>
+            📊 Complaint Monitoring
+        </h2>
+
+        <p>
+            View reported waste locations,
+            complaints and their current status.
+        </p>
+
+        <button onclick="goToPage('all-complaints.html')">
+
+            📋 View Reports & Complaints
+
+        </button>
+
+    </div>
+
+
+
+    <!-- LOGOUT -->
+
+    <button class="logout"
+            onclick="logout()">
+
+        Logout
+
+    </button>
+
+
+</div>
+
+
+
+<script>
+
+
+/* GET AUTHORITY NAME */
+
+const authority =
+    localStorage.getItem("authorityType");
+
+
+if (authority) {
+
+    document.getElementById(
+        "authorityName"
+    ).innerHTML =
+        authority + " Dashboard";
+
+}
+/* LOAD COMPLAINT STATISTICS */
+
+async function loadComplaintStatistics() {
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:3001/reports"
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "Unable to load complaints"
+            );
+        }
+
+        const reports =
+            await response.json();
+
+
+        const pending =
+            reports.filter(
+                report =>
+                    report.status === "Pending"
+            ).length;
+
+
+        const assigned =
+            reports.filter(
+                report =>
+                    report.status === "Assigned"
+            ).length;
+
+
+        const progress =
+            reports.filter(
+                report =>
+                    report.status === "In Progress"
+            ).length;
+
+
+        const resolved =
+            reports.filter(
+                report =>
+                    report.status === "Resolved"
+            ).length;
+
+
+        const rejected =
+            reports.filter(
+                report =>
+                    report.status === "Rejected"
+            ).length;
+
+
+        document.getElementById(
+            "pendingCount"
+        ).innerText = pending;
+
+
+        document.getElementById(
+            "assignedCount"
+        ).innerText = assigned;
+
+
+        document.getElementById(
+            "progressCount"
+        ).innerText = progress;
+
+
+        document.getElementById(
+            "resolvedCount"
+        ).innerText = resolved;
+
+
+        document.getElementById(
+            "rejectedCount"
+        ).innerText = rejected;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Statistics loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* LOAD STATISTICS */
+
+loadComplaintStatistics();
+
+
+
+/* OPEN DIFFERENT DASHBOARD */
+
+function goToPage(page) {
+
+    window.location.href = page;
+
+}
+
+
+
+/* LOGOUT */
+
+function logout() {
+
+    localStorage.removeItem(
+        "authorityType"
+    );
+
+    localStorage.removeItem(
+        "authorityUsername"
+    );
+
+    window.location.href =
+        "authority-login.html";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

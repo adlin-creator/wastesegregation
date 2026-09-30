@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Sanitary Inspector - CleanCity</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f3f8f4;
+}
+
+header {
+    background: #16833a;
+    color: white;
+    padding: 20px;
+    border-radius: 0 0 20px 20px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+    padding: 20px;
+}
+
+.back {
+    border: none;
+    background: none;
+    color: #16833a;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.box h2 {
+    color: #16833a;
+}
+
+.complaint {
+    background: #f3f8f4;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 15px;
+}
+
+.location {
+    margin-top: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+}
+
+button {
+    padding: 11px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.verify {
+    background: #16833a;
+    color: white;
+}
+
+.reject {
+    background: #d9534f;
+    color: white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>👮 CleanCity</h1>
+
+<p>Sanitary Inspector Dashboard</p>
+
+</header>
+
+
+<div class="container">
+
+<button class="back"
+        onclick="goBack()">
+
+← Back to Authority Home
+
+</button>
+
+
+<div class="box">
+
+<h2>🔍 Complaint Verification</h2>
+
+<p>
+Inspect and verify complaints reported
+by citizens.
+</p>
+
+</div>
+
+
+<div id="inspectorComplaints">
+
+    <p style="text-align:center;color:#666;">
+        Loading assigned complaints...
+    </p>
+
+</div>
+<div class="box">
+
+<h2>🔴 Rejected Complaints</h2>
+
+<div id="rejectedComplaints">
+
+    <p style="text-align:center;color:#666;">
+        Loading rejected complaints...
+    </p>
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<h2>📝 Inspection Notes</h2>
+
+<p>
+Verified complaints can be forwarded to
+the appropriate department for action.
+</p>
+
+</div>
+
+</div>
+
+
+<script>
+
+function goBack() {
+
+    window.location.href =
+        "authority-home.html";
+
+}
+
+
+async function loadInspectorComplaints() {
+
+    const container =
+        document.getElementById("inspectorComplaints");
+
+    try {
+
+        const response =
+            await fetch("http://localhost:3001/reports");
+
+        if (!response.ok) {
+            throw new Error("Unable to load complaints");
+        }
+
+        const reports =
+            await response.json();
+
+        // Show only complaints assigned to sanitation
+        const assignedReports =
+            reports.filter(function(report) {
+                return report.status === "Assigned";
+            });
+
+        if (assignedReports.length === 0) {
+
+            container.innerHTML = `
+                <div class="complaint">
+
+                    <h3>📋 No Assigned Complaints</h3>
+
+                    <p>
+                        There are currently no complaints
+                        waiting for inspection.
+                    </p>
+
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = "";
+
+        assignedReports.forEach(function(report) {
+
+            let location =
+                "Location not available";
+
+            if (
+                report.latitude !== null &&
+                report.longitude !== null
+            ) {
+                location =
+                    report.latitude +
+                    ", " +
+                    report.longitude;
+            }
+
+            container.innerHTML += `
+
+                <div class="complaint">
+
+                    <h3>
+                        🗑️ Complaint #${report.report_id}
+                    </h3>
+
+                    <p>
+                        ${report.description}
+                    </p>
+
+                    <div class="location">
+
+                        📍 <strong>Location:</strong>
+
+                        <br>
+
+                        ${location}
+
+                        <br><br>
+
+                        <strong>Ward:</strong>
+                        ${report.ward}
+
+                    </div>
+
+                    <br>
+
+                    <strong>Status:</strong>
+                    🟠 ${report.status}
+
+                    <br>
+
+                    <button
+                        class="verify"
+                        onclick="verifyComplaint('${report.report_id}', this)">
+
+                        ✓ Verify Complaint
+
+                    </button>
+
+                    <button
+                        class="reject"
+                        onclick="rejectComplaint('${report.report_id}', this)">
+
+                        ✕ Reject
+
+                    </button>
+
+                </div>
+
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Inspector complaints error:",
+            error
+        );
+
+        container.innerHTML = `
+
+            <div class="complaint">
+
+                <h3>⚠️ Unable to Load Complaints</h3>
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+}
+loadInspectorComplaints();
+async function verifyComplaint(reportId, button) {
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/reports/" +
+            reportId +
+            "/status",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: "In Progress"
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Unable to verify complaint.");
+            return;
+        }
+
+        alert("Complaint verified and moved to In Progress! 🌱");
+
+        loadInspectorComplaints();
+
+    } catch (error) {
+
+        console.error(
+            "Verification error:",
+            error
+        );
+
+        alert(
+            "Unable to connect to the backend. " +
+            "Please make sure the server is running."
+        );
+    }
+}
+async function rejectComplaint(reportId, button) {
+
+    const confirmReject =
+        confirm("Are you sure you want to reject this complaint?");
+
+    if (!confirmReject) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/reports/" +
+            reportId +
+            "/status",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: "Rejected"
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Unable to reject complaint.");
+            return;
+        }
+
+        alert("Complaint rejected successfully. 🔴");
+
+        loadInspectorComplaints();
+
+    } catch (error) {
+
+        console.error(
+            "Rejection error:",
+            error
+        );
+
+        alert(
+            "Unable to connect to the backend. " +
+            "Please make sure the server is running."
+        );
+    }
+}
+async function loadRejectedComplaints() {
+
+    const container =
+        document.getElementById("rejectedComplaints");
+
+    try {
+
+        const response =
+            await fetch("http://localhost:3001/reports");
+
+        if (!response.ok) {
+            throw new Error("Unable to load rejected complaints");
+        }
+
+        const reports =
+            await response.json();
+
+        const rejectedReports =
+            reports.filter(function(report) {
+                return report.status === "Rejected";
+            });
+
+        if (rejectedReports.length === 0) {
+
+            container.innerHTML = `
+                <p style="text-align:center;color:#666;">
+                    No rejected complaints.
+                </p>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = "";
+
+        rejectedReports.forEach(function(report) {
+
+            let location =
+                "Location not available";
+
+            if (
+                report.latitude !== null &&
+                report.longitude !== null
+            ) {
+                location =
+                    report.latitude +
+                    ", " +
+                    report.longitude;
+            }
+
+            container.innerHTML += `
+
+                <div class="complaint">
+
+                    <h3>
+                        🔴 Complaint #${report.report_id}
+                    </h3>
+
+                    <p>
+                        ${report.description}
+                    </p>
+
+                    <div class="location">
+
+                        📍 <strong>Location:</strong>
+
+                        <br>
+
+                        ${location}
+
+                        <br><br>
+
+                        <strong>Ward:</strong>
+                        ${report.ward}
+
+                    </div>
+
+                    <br>
+
+                    <strong>Status:</strong>
+                    🔴 Rejected
+
+                </div>
+
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Rejected complaints error:",
+            error
+        );
+
+        container.innerHTML = `
+            <p style="color:#d9534f;">
+                Unable to load rejected complaints.
+            </p>
+        `;
+
+    }
+
+}
+loadRejectedComplaints();
+
+
+</script>
+
+</body>
+
+</html>

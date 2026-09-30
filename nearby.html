@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Nearby Services - CleanCity</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f3f8f4;
+    color: #222;
+}
+
+
+/* Header */
+
+.header {
+    background: #168a45;
+    color: white;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back {
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+
+/* Container */
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+/* Introduction */
+
+.intro {
+    text-align: center;
+}
+
+.intro h2 {
+    color: #106c36;
+}
+
+.intro p {
+    color: #666;
+    line-height: 1.5;
+}
+
+
+/* Location Card */
+
+.location-card {
+    background: white;
+    padding: 18px;
+    margin-top: 18px;
+    border-radius: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.location-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #106c36;
+}
+.location-input {
+    width: 100%;
+    padding: 13px;
+    margin-top: 12px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+}
+
+.location-input:focus {
+    border-color: #168a45;
+}
+
+.location-text {
+    margin-top: 8px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.location-button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #168a45;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+
+/* Service Cards */
+
+.service-card {
+    background: white;
+    padding: 18px;
+    margin-top: 15px;
+    border-radius: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.service-top {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+    background: #e4f4e9;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 27px;
+}
+
+.service-info {
+    flex: 1;
+}
+
+.service-info h3 {
+    margin: 0;
+    color: #106c36;
+}
+
+.service-info p {
+    margin: 6px 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+
+/* Status */
+
+.status {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #e4f4e9;
+    color: #106c36;
+    font-weight: bold;
+}
+
+
+/* Directions */
+
+.direction-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #106c36;
+    color: white;
+    cursor: pointer;
+}
+
+
+/* Loading */
+
+.loading {
+    text-align: center;
+    color: #666;
+    padding: 25px;
+}
+
+
+/* No Results */
+
+.no-results {
+    background: white;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 18px;
+    text-align: center;
+    color: #666;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+
+/* Error */
+
+.error-box {
+    background: #fff1f1;
+    color: #b00020;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- Header -->
+
+<div class="header">
+
+    <span
+        class="back"
+        onclick="goHome()">
+        ←
+    </span>
+
+    <h2>📍 Nearby Services</h2>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- Introduction -->
+
+    <div class="intro">
+
+        <h2>🗑️ Dustbins Near You</h2>
+
+<p>
+    Enter your city to find verified dustbin
+    locations and their latest recorded status.
+</p>
+
+    </div>
+
+
+    <!-- Location -->
+
+    <div class="location-card">
+
+    <div class="location-title">
+        📍 Enter City
+    </div>
+
+    <input
+        type="text"
+        id="cityInput"
+        placeholder="Enter city name"
+        class="location-input"
+    >
+
+    <button
+        class="location-button"
+        onclick="findDustbins()">
+        🔍 Find Dustbins
+    </button>
+
+</div>
+
+    <!-- Real Services -->
+
+    <div id="servicesContainer">
+
+        <div class="loading">
+
+    🗑️ Enter a city to find
+    verified dustbin locations.
+
+</div>
+
+    </div>
+
+
+</div>
+
+<script>
+
+
+
+function findDustbins() {
+
+    const city = document.getElementById("cityInput").value.trim();
+
+    const container = document.getElementById("servicesContainer");
+
+    if (city === "") {
+
+        container.innerHTML = `
+            <div class="error-box">
+                Please enter a city name.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="loading">
+            🔍 Checking verified dustbin records...
+        </div>
+    `;
+
+    fetch(
+        `http://localhost:3001/dustbins?city=${encodeURIComponent(city)}`
+    )
+
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error("Failed to load dustbins");
+        }
+
+        return response.json();
+    })
+
+    .then(dustbins => {
+
+        if (dustbins.length === 0) {
+
+            container.innerHTML = `
+                <div class="no-results">
+                    ❌ No verified dustbin records found for
+                    <strong>${city}</strong>.
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = "";
+
+        dustbins.forEach(dustbin => {
+
+            container.innerHTML += `
+
+                <div class="service-card">
+
+                    <div class="service-top">
+
+                        <div class="icon">
+                            🗑️
+                        </div>
+
+                        <div class="service-info">
+
+                            <h3>
+                                ${dustbin.name}
+                            </h3>
+
+                            <p>
+                                📍 ${dustbin.location}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="status">
+                        Status:
+                        <strong>
+                            ${dustbin.status}
+                        </strong>
+                    </div>
+
+                </div>
+
+            `;
+        });
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="error-box">
+                ⚠️ Unable to connect to CleanCity server.
+            </div>
+        `;
+
+    });
+}
+
+
+
+/* =================================
+   GO HOME
+================================= */
+
+function goHome() {
+
+    window.location.href =
+        "home.html";
+
+}
+
+</script>
+
+<script src="language.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Waste Complaints - CleanCity</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f8f4;
+        }
+
+        header {
+            background: #16823b;
+            color: white;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #16823b;
+        }
+
+        .complaint {
+            background: white;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+
+        .complaint h3 {
+            margin-top: 0;
+            color: #16823b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #16823b;
+            color: white;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .back {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>♻️ CleanCity</h1>
+    <p>Waste Complaints</p>
+</header>
+
+<div class="container">
+
+    <h2>♻️ Waste Collection Complaints</h2>
+
+    <div id="complaintsContainer">
+
+    <p style="text-align:center;color:#666;">
+        Loading complaints...
+    </p>
+
+</div>
+
+    <button class="back" onclick="goBack()">
+        ← Back to Waste Management
+    </button>
+
+</div>
+
+<script>
+function goBack() {
+    window.location.href = "waste-management.html";
+}
+async function loadComplaints() {
+
+    const container =
+        document.getElementById("complaintsContainer");
+
+    try {
+
+        const response =
+            await fetch("http://localhost:3001/reports");
+
+        const reports =
+            await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                reports.message ||
+                "Unable to load complaints"
+            );
+        }
+
+        if (reports.length === 0) {
+
+            container.innerHTML = `
+                <div class="complaint">
+
+                    <h3>No Complaints Yet</h3>
+
+                    <p>
+                        No waste complaints have been submitted by users.
+                    </p>
+
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = "";
+
+        reports.forEach(function(report) {
+
+            let statusClass = "status";
+
+            container.innerHTML += `
+
+                <div class="complaint">
+
+                    <h3>
+                        Complaint #${report.report_id}
+                    </h3>
+
+                    <p>
+                        <b>Issue:</b>
+                        ${report.problem_type}
+                    </p>
+
+                    <p>
+                        <b>Waste Type:</b>
+                        ${report.waste_type}
+                    </p>
+
+                    <p>
+                        <b>Description:</b>
+                        ${report.description}
+                    </p>
+
+                    <p>
+                        <b>Location:</b>
+                        ${
+                            report.latitude !== null
+                            ? report.latitude + ", " + report.longitude
+                            : "Location not available"
+                        }
+                    </p>
+
+                    <p>
+                        <b>Reported By:</b>
+                        ${report.user_email || "Citizen"}
+                    </p>
+
+                    <p>
+                        <b>Date:</b>
+                        ${new Date(report.report_date).toLocaleString()}
+                    </p>
+
+                    <span class="${statusClass}">
+    ${report.status === "Resolved" ? "🟢" :
+      report.status === "In Progress" ? "🔵" :
+      report.status === "Assigned" ? "🟠" : "🟡"}
+    ${report.status}
+</span>
+
+<select
+    onchange="updateStatus('${report.report_id}', this.value)"
+    style="
+        width:100%;
+        padding:10px;
+        margin-top:12px;
+        border:1px solid #ccc;
+        border-radius:8px;
+        font-size:14px;
+    "
+>
+    <option value="Pending"
+        ${report.status === "Pending" ? "selected" : ""}>
+        Pending
+    </option>
+
+    <option value="Assigned"
+        ${report.status === "Assigned" ? "selected" : ""}>
+        Assigned
+    </option>
+
+    <option value="In Progress"
+        ${report.status === "In Progress" ? "selected" : ""}>
+        In Progress
+    </option>
+
+    <option value="Resolved"
+        ${report.status === "Resolved" ? "selected" : ""}>
+        Resolved
+    </option>
+</select>
+
+                </div>
+
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Complaint loading error:",
+            error
+        );
+
+        container.innerHTML = `
+
+            <div class="complaint">
+
+                <h3>⚠️ Unable to Load Complaints</h3>
+
+                <p>
+                    Please make sure the CleanCity backend is running.
+                </p>
+
+            </div>
+
+        `;
+    }
+}
+
+
+/* Load complaints when page opens */
+loadComplaints();
+async function updateStatus(reportId, newStatus) {
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:3001/reports/"
+                + reportId
+                + "/status",
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        status: newStatus
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                data.message ||
+                "Unable to update status."
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Report status updated successfully! 🌱"
+        );
+
+
+        /* Reload complaints */
+        loadComplaints();
+
+
+    } catch (error) {
+
+        console.error(
+            "Status update error:",
+            error
+        );
+
+        alert(
+            "Unable to connect to the server."
+        );
+
+    }
+
+}
+</script>
+
+</body>
+</html>

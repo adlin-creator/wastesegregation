@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Complaints - CleanCity</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f8f4;
+        }
+
+        header {
+            background: #16823b;
+            color: white;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 750px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #16823b;
+        }
+
+        .complaint {
+            background: white;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+
+        .complaint h3 {
+            color: #16823b;
+            margin-top: 0;
+        }
+
+        .type {
+            background: #e8f5e9;
+            color: #16823b;
+            padding: 6px 10px;
+            border-radius: 15px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status {
+            background: #fff3cd;
+            color: #856404;
+            padding: 7px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #16823b;
+            color: white;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .back {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>📋 CleanCity</h1>
+    <p>All User Complaints</p>
+</header>
+
+<div class="container">
+
+    <h2>📋 Complaint List</h2>
+    <div id="complaintsContainer">
+
+    <p style="text-align:center;color:#666;">
+        Loading complaints...
+    </p>
+
+</div>
+
+    
+
+    <button class="back" onclick="goBack()">
+        ← Back to Authority Home
+    </button>
+
+</div>
+
+<script>
+function goBack() {
+    window.location.href = "authority-home.html";
+}
+async function loadAllComplaints() {
+
+    const container =
+        document.getElementById("complaintsContainer");
+
+    try {
+
+        const response =
+            await fetch("http://localhost:3001/reports");
+
+        const reports =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                reports.message ||
+                "Unable to load complaints"
+            );
+
+        }
+
+
+        if (reports.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="complaint">
+
+                    <h3>
+                        No Complaints Yet
+                    </h3>
+
+                    <p>
+                        No complaints have been
+                        submitted by citizens.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        reports.forEach(function(report) {
+
+            /* Complaint type */
+
+            let complaintType =
+                "Waste Management";
+
+
+            if (
+                report.problem_type
+                    .toLowerCase()
+                    .includes("sanitation")
+            ) {
+
+                complaintType =
+                    "Sanitation";
+
+            }
+
+
+            /* Status icon */
+
+            let statusIcon = "🟡";
+
+
+            if (report.status === "Assigned") {
+
+                statusIcon = "🟠";
+
+            }
+
+            if (report.status === "In Progress") {
+
+                statusIcon = "🔵";
+
+            }
+
+            if (report.status === "Resolved") {
+
+                statusIcon = "🟢";
+
+            }
+
+
+            container.innerHTML += `
+
+                <div class="complaint">
+
+                    <h3>
+                        Complaint #${report.report_id}
+                    </h3>
+
+
+                    <span class="type">
+                        ${complaintType}
+                    </span>
+
+
+                    <p>
+                        <b>Issue:</b>
+                        ${report.problem_type}
+                    </p>
+
+
+                    <p>
+                        <b>Waste Type:</b>
+                        ${report.waste_type}
+                    </p>
+
+
+                    <p>
+                        <b>Description:</b>
+                        ${report.description}
+                    </p>
+
+
+                    <p>
+                        <b>Location:</b>
+
+                        ${
+                            report.latitude !== null
+                            ? report.latitude +
+                              ", " +
+                              report.longitude
+                            : "Location not available"
+                        }
+
+                    </p>
+
+
+                    <p>
+                        <b>Reported By:</b>
+                        ${report.user_email || "Citizen"}
+                    </p>
+
+
+                    <p>
+                        <b>Date:</b>
+                        ${new Date(
+                            report.report_date
+                        ).toLocaleString()}
+                    </p>
+
+
+                    <p>
+
+                        <b>Status:</b>
+
+                        <span class="status">
+
+                            ${statusIcon}
+                            ${report.status}
+
+                        </span>
+
+                    </p>
+
+                </div>
+
+            `;
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "All complaints error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="complaint">
+
+                <h3>
+                    ⚠️ Unable to Load Complaints
+                </h3>
+
+                <p>
+                    Please make sure the CleanCity
+                    backend is running.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* Load complaints when page opens */
+loadAllComplaints();
+</script>
+
+</body>
+</html>

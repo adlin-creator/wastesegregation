@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Account Created - CleanCity</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f3f8f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-container {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Success Icon */
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            background: #e4f4e9;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+        }
+
+        /* Logo */
+        .logo {
+            color: #168a45;
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Text */
+        h1 {
+            color: #168a45;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .message {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* Button */
+        .home-btn {
+            width: 100%;
+            padding: 14px;
+            background: #168a45;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .home-btn:hover {
+            background: #106c36;
+        }
+
+        /* Small text */
+        .tagline {
+            margin-top: 22px;
+            color: #888;
+            font-size: 12px;
+        }
+
+        @media (max-width: 500px) {
+            .success-container {
+                padding: 35px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="success-container">
+
+        <div class="logo">
+            🌱 CleanCity
+        </div>
+
+        <div class="success-icon">
+            ✅
+        </div>
+
+        <h1>Account Created!</h1>
+
+        <p class="message">
+            Welcome to CleanCity! 🎉<br>
+            You account has been created successfully.
+        </p>
+
+        <button class="home-btn" onclick="goToHome()">
+            🏠 GO TO HOME
+        </button>
+
+        <p class="tagline">
+            Let's keep our city clean together. 🌱
+        </p>
+
+    </div>
+
+    <script>
+        function goToHome() {
+            window.location.href = "home.html";
+        }
+    </script>
+    <script src="language.js"></script>
+
+</body>
+</html>

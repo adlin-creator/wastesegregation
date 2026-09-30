@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Sanitation Department - CleanCity</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f3f8f4;
+}
+
+header {
+    background: #16833a;
+    color: white;
+    padding: 20px;
+    border-radius: 0 0 20px 20px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+    padding: 20px;
+}
+
+.back {
+    border: none;
+    background: none;
+    color: #16833a;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.box h2 {
+    color: #16833a;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap: 15px;
+}
+
+.stat {
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.number {
+    font-size: 30px;
+    font-weight: bold;
+    color: #16833a;
+}
+
+.task {
+    background: #f3f8f4;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 12px;
+}
+
+.status {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #fff3cd;
+    color: #856404;
+    font-size: 13px;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 15px;
+    background: #16833a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🧹 CleanCity</h1>
+
+<p>Sanitation Department</p>
+
+</header>
+
+
+<div class="container">
+
+<button class="back"
+        onclick="goBack()">
+
+← Back to Authority Home
+
+</button>
+
+
+<div class="box">
+
+<h2>🧹 Sanitation Management</h2>
+
+<p>
+Manage cleaning complaints and monitor
+sanitation activities.
+</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="number" id="totalCleaningRequests">24</div>
+
+<p>Cleaning Requests</p>
+
+</div>
+
+
+<div class="stat">
+
+<div class="number" id="pendingCleaningRequests">8</div>
+
+<p>Pending</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="number" id="totalRequests">0</div>
+
+<p>Cleaning Requests</p>
+
+</div>
+
+
+<div class="stat">
+
+<div class="number" id="pendingRequests">0</div>
+
+<p>Pending</p>
+
+</div>
+
+
+<div class="stat">
+
+<div class="number" id="progressRequests">0</div>
+
+<p>In Progress</p>
+
+</div>
+
+
+<div class="stat">
+
+<div class="number" id="completedRequests">0</div>
+
+<p>Completed</p>
+
+</div>
+
+</div>
+
+<div class="box">
+
+<h2>🧹 Cleaning Tasks</h2>
+
+<div id="tasksContainer">
+
+    <p style="text-align:center;color:#666;">
+        Loading cleaning tasks...
+    </p>
+
+</div>
+
+</div>
+<div class="box">
+
+<h2>📋 Complaint Management</h2>
+
+<p>
+View citizen complaints related to
+sanitation and cleaning.
+</p>
+
+
+<button onclick="window.location.href='view-sanitation-complaints.html'">
+    📋 View Sanitation Complaints
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+function goBack() {
+
+    window.location.href =
+        "authority-home.html";
+
+}
+async function loadSanitationDashboard() {
+
+    try {
+
+        const response =
+            await fetch("http://localhost:3001/reports");
+
+        const reports =
+            await response.json();
+
+            const sanitationReports =
+    reports.filter(function(report) {
+        return (
+            report.status === "In Progress" ||
+            report.status === "Assigned"
+        );
+    });
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                reports.message ||
+                "Unable to load reports"
+            );
+
+        }
+
+
+        /* -------------------------
+           UPDATE STATISTICS
+        ------------------------- */
+
+        const total =
+            sanitationReports.length;
+
+        const pending =
+            reports.filter(
+                report => report.status === "Pending"
+            ).length;
+
+        const progress =
+            reports.filter(
+                report => report.status === "In Progress"
+            ).length;
+
+        const completed =
+            reports.filter(
+                report => report.status === "Resolved"
+            ).length;
+
+
+        document.getElementById("totalRequests")
+            .innerText = total;
+
+        document.getElementById("pendingRequests")
+            .innerText = pending;
+
+        document.getElementById("progressRequests")
+            .innerText = progress;
+
+        document.getElementById("completedRequests")
+            .innerText = completed;
+
+
+        /* -------------------------
+           SHOW CLEANING TASKS
+        ------------------------- */
+
+        const container =
+            document.getElementById("tasksContainer");
+
+
+        if (sanitationReports.length === 0) {
+
+            container.innerHTML = `
+                <div class="task">
+
+                    <strong>No Cleaning Tasks</strong>
+
+                    <p>
+                        No citizen complaints have been submitted yet.
+                    </p>
+
+                </div>
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        sanitationReports.forEach(function(report) {
+
+            let statusIcon = "🟡";
+
+
+            if (report.status === "Assigned") {
+                statusIcon = "🟠";
+            }
+
+            if (report.status === "In Progress") {
+                statusIcon = "🔵";
+            }
+
+            if (report.status === "Resolved") {
+                statusIcon = "🟢";
+            }
+            if (report.status === "Rejected") {
+    statusIcon = "🔴";
+}
+
+
+            const task =
+                document.createElement("div");
+
+            task.className = "task";
+
+
+            task.innerHTML = `
+
+                <strong>
+                    Complaint #${report.report_id}
+                </strong>
+
+                <p>
+                    ${report.description}
+                </p>
+
+                📍
+                ${
+                    report.latitude !== null
+                    ? report.latitude + ", " + report.longitude
+                    : "Location not available"
+                }
+
+                <br>
+
+                <span class="status">
+
+                    ${statusIcon}
+                    ${report.status}
+
+                </span>
+                ${report.status === "Assigned" ? `
+    <br>
+    <button
+        class="verify"
+        onclick="startCleaning('${report.report_id}', this)">
+        🧹 Start Cleaning
+    </button>
+` : ""}
+
+${report.status === "In Progress" ? `
+    <br>
+    <button
+        class="verify"
+        onclick="markAsResolved('${report.report_id}', this)">
+        ✓ Mark as Resolved
+    </button>
+` : ""}
+
+            `;
+
+
+            container.appendChild(task);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard loading error:",
+            error
+        );
+
+
+        document.getElementById("tasksContainer")
+            .innerHTML = `
+
+            <div class="task">
+
+                <strong>
+                    ⚠️ Unable to Load Tasks
+                </strong>
+
+                <p>
+                    Please make sure the CleanCity
+                    backend is running.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* Load dashboard data */
+loadSanitationDashboard();
+async function startCleaning(reportId, button) {
+    try {
+        const response = await fetch(
+            "http://localhost:3001/reports/" +
+            reportId +
+            "/status",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: "In Progress"
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(
+                data.message ||
+                "Unable to start cleaning."
+            );
+            return;
+        }
+
+        alert("Cleaning work started! 🧹");
+
+        loadSanitationDashboard();
+
+    } catch (error) {
+        console.error(
+            "Start cleaning error:",
+            error
+        );
+
+        alert(
+            "Unable to connect to the backend. " +
+            "Please make sure the server is running."
+        );
+    }
+}
+async function markAsResolved(reportId, button) {
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:3001/reports/" +
+            reportId +
+            "/status",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: "Resolved"
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(
+                data.message ||
+                "Unable to resolve complaint."
+            );
+            return;
+        }
+
+        alert("Complaint marked as Resolved! 🟢");
+
+        loadSanitationDashboard();
+
+    } catch (error) {
+
+        console.error(
+            "Resolve error:",
+            error
+        );
+
+        alert(
+            "Unable to connect to the backend. " +
+            "Please make sure the server is running."
+        );
+    }
+}
+
+</script>
+
+</body>
+
+</html>
