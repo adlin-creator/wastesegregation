@@ -866,7 +866,7 @@ async function loadNextCollectionTime() {
     try {
 
         const response = await fetch(
-            "http://localhost:3001/collection-schedule?ward=Ward%2012"
+            "https://wastesegregation-production.up.railway.app/collection-schedule?ward=Ward%2012"
         );
 
         const data = await response.json();
