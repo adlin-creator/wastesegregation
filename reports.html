@@ -301,10 +301,10 @@ async function displayReports() {
     try {
 
         const response =
-            await fetch(
-                "http://localhost:3001/reports?email="
-                + encodeURIComponent(user.email)
-            );
+           await fetch(
+    "https://wastesegregation-production.up.railway.app/reports?email="
+    + encodeURIComponent(user.email)
+);
 
 
         const reports =
