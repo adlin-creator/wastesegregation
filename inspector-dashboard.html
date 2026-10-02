@@ -183,7 +183,7 @@ async function loadInspectorComplaints() {
     try {
 
         const response =
-            await fetch("http://localhost:3001/reports");
+            await fetch("https://wastesegregation-production.up.railway.app/reports");
 
         if (!response.ok) {
             throw new Error("Unable to load complaints");
@@ -318,7 +318,7 @@ async function verifyComplaint(reportId, button) {
     try {
 
         const response = await fetch(
-            "http://localhost:3001/reports/" +
+            "https://wastesegregation-production.up.railway.app/reports/" +
             reportId +
             "/status",
             {
@@ -368,7 +368,7 @@ async function rejectComplaint(reportId, button) {
     try {
 
         const response = await fetch(
-            "http://localhost:3001/reports/" +
+            "https://wastesegregation-production.up.railway.app/reports/" +
             reportId +
             "/status",
             {
@@ -414,8 +414,7 @@ async function loadRejectedComplaints() {
     try {
 
         const response =
-            await fetch("http://localhost:3001/reports");
-
+            await fetch("https://wastesegregation-production.up.railway.app/reports");
         if (!response.ok) {
             throw new Error("Unable to load rejected complaints");
         }
