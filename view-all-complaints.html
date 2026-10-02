@@ -122,8 +122,7 @@ async function loadAllComplaints() {
     try {
 
         const response =
-            await fetch("http://localhost:3001/reports");
-
+          await fetch("https://wastesegregation-production.up.railway.app/reports");
         const reports =
             await response.json();
 
