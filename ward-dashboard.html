@@ -243,7 +243,7 @@ async function assignComplaint(reportId, button) {
     try {
 
         const response = await fetch(
-            "http://localhost:3001/reports/" +
+            "https://wastesegregation-production.up.railway.app/reports/" +
             reportId +
             "/status",
             {
@@ -311,7 +311,7 @@ async function loadWardComplaints() {
 
         // Get all reports
         const response =
-    await fetch("http://127.0.0.1:3001/reports");
+   await fetch("https://wastesegregation-production.up.railway.app/reports");
         if (!response.ok) {
             throw new Error("Unable to connect to backend");
         }
@@ -504,7 +504,7 @@ async function viewWardMap() {
     try {
 
         const response =
-            await fetch("http://localhost:3001/reports");
+           await fetch("https://wastesegregation-production.up.railway.app/reports");
 
         if (!response.ok) {
             throw new Error("Unable to load complaints");
