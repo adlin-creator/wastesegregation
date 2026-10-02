@@ -110,9 +110,8 @@ async function loadComplaints() {
 
     try {
 
-        const response =
-            await fetch("http://localhost:3001/reports");
-
+       const response =
+    await fetch("https://wastesegregation-production.up.railway.app/reports");
         const reports =
             await response.json();
 
@@ -265,9 +264,9 @@ async function updateStatus(reportId, newStatus) {
 
         const response =
             await fetch(
-                "http://localhost:3001/reports/"
-                + reportId
-                + "/status",
+    "https://wastesegregation-production.up.railway.app/reports/"
+    + reportId
+    + "/status",
                 {
                     method: "PUT",
 
