@@ -197,9 +197,9 @@ async function loadProfile() {
 
         // Get user's reports from backend
         const response = await fetch(
-            "http://localhost:3001/reports?email=" +
-            encodeURIComponent(userEmail)
-        );
+    "https://wastesegregation-production.up.railway.app/reports?email=" +
+    encodeURIComponent(userEmail)
+);
 
         if (!response.ok) {
 
@@ -258,10 +258,9 @@ async function loadProfilePoints() {
 
         const response =
             await fetch(
-                "http://localhost:3001/users/points?email=" +
-                encodeURIComponent(user.email)
-            );
-
+    "https://wastesegregation-production.up.railway.app/users/points?email=" +
+    encodeURIComponent(user.email)
+);
         const data =
             await response.json();
 
