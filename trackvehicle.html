@@ -509,9 +509,9 @@ async function searchVehicle() {
     try {
 
         const response = await fetch(
-            "http://localhost:3001/collection-vehicles?location="
-            + encodeURIComponent(location)
-        );
+    "https://wastesegregation-production.up.railway.app/collection-vehicles?location="
+    + encodeURIComponent(location)
+);
 
 
         const vehicles =
