@@ -14,10 +14,11 @@ const PORT = 3001;
 // ===============================
 
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password:process.env.DB_PASSWORD,
-    database: "waste_segregation"
+    host: process.env.MYSQLHOST,
+    port: process.env.MYSQLPORT,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE
 });
 
 // Test MySQL connection
