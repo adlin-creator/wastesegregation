@@ -510,7 +510,7 @@ async function loadComplaintStatistics() {
 
         const response =
             await fetch(
-                "http://localhost:3001/reports"
+                "https://wastesegregation-production.up.railway.app/reports"
             );
 
         if (!response.ok) {
