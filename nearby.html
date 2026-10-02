@@ -332,7 +332,7 @@ function findDustbins() {
     `;
 
     fetch(
-        `http://localhost:3001/dustbins?city=${encodeURIComponent(city)}`
+        `https://wastesegregation-production.up.railway.app/dustbins?city=${encodeURIComponent(city)}`}`
     )
 
     .then(response => {
