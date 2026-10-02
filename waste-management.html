@@ -336,7 +336,7 @@ async function loadWasteManagement() {
 
         const reportsResponse =
             await fetch(
-                "http://localhost:3001/reports"
+               "https://wastesegregation-production.up.railway.app/reports"
             );
 
         if (!reportsResponse.ok) {
@@ -477,7 +477,7 @@ async function loadWasteManagement() {
 
         const collectionResponse =
             await fetch(
-                "http://localhost:3001/collection-activities"
+                "https://wastesegregation-production.up.railway.app/collection-activities"
             );
 
 
@@ -633,7 +633,7 @@ async function updateVehicleStatus(id, status) {
     try {
 
         const response = await fetch(
-            "http://localhost:3001/collection-activities/"
+           "https://wastesegregation-production.up.railway.app/collection-activities/"
             + id
             + "/status",
             {
@@ -729,7 +729,7 @@ async function saveVehicle() {
     try {
 
         const response = await fetch(
-            "http://localhost:3001/collection-vehicles",
+           "https://wastesegregation-production.up.railway.app/collection-vehicles",
             {
                 method: "POST",
 
