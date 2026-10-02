@@ -141,9 +141,9 @@ async function loadNotifications() {
     try {
 
         const response =
-            await fetch(
-                "http://localhost:3001/notifications?email=" +
-                encodeURIComponent(user.email)
+           await fetch(
+    "https://wastesegregation-production.up.railway.app/notifications?email=" +
+    encodeURIComponent(user.email)
             );
 
         const reports =
