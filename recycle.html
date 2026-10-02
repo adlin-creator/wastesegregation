@@ -519,8 +519,8 @@ async function searchCenters() {
     try {
 
         const response = await fetch(
-            `http://localhost:3001/collection-centres?${params.toString()}`
-        );
+    `https://wastesegregation-production.up.railway.app/collection-centres?${params.toString()}`
+);
 
         if (!response.ok) {
             throw new Error("Failed to load recycling centres");
