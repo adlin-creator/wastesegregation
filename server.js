@@ -304,141 +304,88 @@ app.put("/reports/:reportId/status", (req, res) => {
         });
     }
 
-    // First get the report details
-    const getReportSql = `
-        SELECT user_email, status, points_awarded
-        FROM reports
+    const sql = `
+        UPDATE reports
+        SET status = ?
         WHERE report_id = ?
-        LIMIT 1
     `;
 
-    db.query(
-        getReportSql,
-        [reportId],
-        (err, results) => {
+    db.query(sql, [status, reportId], (err, result) => {
 
-            if (err) {
-                console.log(
-                    "Report lookup error:",
-                    err.message
-                );
+        if (err) {
+            console.log("Status update error:", err.message);
 
-                return res.status(500).json({
-                    message: "Unable to find report"
-                });
-            }
+            return res.status(500).json({
+                message: "Unable to update status"
+            });
+        }
 
-            if (results.length === 0) {
-                return res.status(404).json({
-                    message: "Report not found"
-                });
-            }
+        if (status === "Resolved") {
 
-            const report = results[0];
-
-            // Update report status
-            const updateSql = `
-                UPDATE reports
-                SET status = ?
+            const getUserSql = `
+                SELECT user_email
+                FROM reports
                 WHERE report_id = ?
+                LIMIT 1
             `;
 
-            db.query(
-                updateSql,
-                [status, reportId],
-                (err, result) => {
+            db.query(getUserSql, [reportId], (err, rows) => {
+
+                if (err || rows.length === 0) {
+                    return res.json({
+                        message: "Report resolved successfully! 🌱"
+                    });
+                }
+
+                const email = rows[0].user_email;
+
+                const pointsSql = `
+                    UPDATE users
+                    SET points = points + 20
+                    WHERE email = ?
+                `;
+
+                db.query(pointsSql, [email], (err) => {
 
                     if (err) {
-                        console.log(
-                            "Status update error:",
-                            err.message
-                        );
+                        console.log("Points update error:", err.message);
 
-                        return res.status(500).json({
-                            message:
-                                "Unable to update status"
+                        return res.json({
+                            message: "Report resolved, but points could not be added."
                         });
                     }
 
-                    // Give 20 points only when report
-                    // becomes Resolved for the first time
-                    if (
-                        status === "Resolved" &&
-                        report.points_awarded === 0 &&
-                        report.user_email
-                    ) {
+                    const markSql = `
+                        UPDATE reports
+                        SET points_awarded = 1
+                        WHERE report_id = ?
+                    `;
 
-                        const addPointsSql = `
-                            UPDATE users
-                            SET points = points + 20
-                            WHERE email = ?
-                        `;
+                    db.query(markSql, [reportId], (err) => {
 
-                        db.query(
-                            addPointsSql,
-                            [report.user_email],
-                            (err) => {
-
-                                if (err) {
-                                    console.log(
-                                        "Points update error:",
-                                        err.message
-                                    );
-
-                                    return res.status(500).json({
-                                        message:
-                                            "Report resolved, but points could not be updated"
-                                    });
-                                }
-
-                                const markPointsSql = `
-                                    UPDATE reports
-                                    SET points_awarded = 1
-                                    WHERE report_id = ?
-                                `;
-
-                                db.query(
-                                    markPointsSql,
-                                    [reportId],
-                                    (err) => {
-
-                                        if (err) {
-                                            console.log(
-                                                "Points tracking error:",
-                                                err.message
-                                            );
-
-                                            return res.status(500).json({
-                                                message:
-                                                    "Report resolved, but points tracking failed"
-                                            });
-                                        }
-
-                                        res.json({
-                                            message:
-                                                "Report resolved and 20 points awarded! 🌱"
-                                        });
-
-                                    }
-                                );
-
-                            }
-                        );
-
-                    } else {
+                        if (err) {
+                            console.log("Points tracking error:", err.message);
+                        }
 
                         res.json({
-                            message:
-                                "Report status updated successfully! 🌱"
+                            message: "Report resolved and 20 points awarded! 🌱"
                         });
 
-                    }
+                    });
 
-                }
-            );
+                });
+
+            });
+
+        } else {
+
+            res.json({
+                message: "Report status updated successfully! 🌱"
+            });
 
         }
-    );
+
+    });
 
 });
 
