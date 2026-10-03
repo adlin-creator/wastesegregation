@@ -223,7 +223,7 @@ app.get("/reports", (req, res) => {
             SELECT *
             FROM reports
             WHERE user_email = ?
-            ORDER BY id DESC
+            ORDER BY report_date DESC
         `;
 
         values = [email];
@@ -250,7 +250,7 @@ app.get("/reports", (req, res) => {
         sql = `
             SELECT *
             FROM reports
-            ORDER BY id DESC
+            ORDER BY report_date DESC
         `;
 
     }
@@ -468,7 +468,7 @@ app.get("/collection-activities", (req, res) => {
     const sql = `
         SELECT *
         FROM collection_activities
-        ORDER BY id DESC
+        ORDER BY  report_date DESC
     `;
 
     db.query(sql, (err, results) => {
@@ -921,7 +921,7 @@ app.get("/collection-vehicles", (req, res) => {
         WHERE LOWER(location) LIKE LOWER(?)
            OR LOWER(route) LIKE LOWER(?)
            OR LOWER(ward) LIKE LOWER(?)
-        ORDER BY id DESC
+        ORDER BY report_date DESC
     `;
 
     db.query(
@@ -1056,7 +1056,7 @@ app.get("/collection-vehicles", (req, res) => {
         WHERE LOWER(location) LIKE LOWER(?)
            OR LOWER(route) LIKE LOWER(?)
            OR LOWER(ward) LIKE LOWER(?)
-        ORDER BY id DESC
+        ORDER BY report_date DESC
     `;
 
     db.query(
@@ -1229,7 +1229,7 @@ app.get("/collection-schedule", (req, res) => {
         WHERE LOWER(ward) = LOWER(?)
           AND collection_time IS NOT NULL
           AND TRIM(collection_time) <> ''
-        ORDER BY id DESC
+        ORDER BY report_date DESC
         LIMIT 1
     `;
 
