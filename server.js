@@ -868,7 +868,7 @@ app.get("/collection-vehicles", (req, res) => {
         WHERE LOWER(location) LIKE LOWER(?)
            OR LOWER(route) LIKE LOWER(?)
            OR LOWER(ward) LIKE LOWER(?)
-        ORDER BY report_date DESC
+        ORDER BY id DESC
     `;
 
     db.query(
