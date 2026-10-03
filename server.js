@@ -1003,7 +1003,7 @@ app.get("/collection-vehicles", (req, res) => {
         WHERE LOWER(location) LIKE LOWER(?)
            OR LOWER(route) LIKE LOWER(?)
            OR LOWER(ward) LIKE LOWER(?)
-        ORDER BY report_date DESC
+        ORDER BY id DESC
     `;
 
     db.query(
@@ -1046,7 +1046,7 @@ app.get("/all-collection-vehicles", (req, res) => {
             longitude,
             collection_time
         FROM collection_activities
-        ORDER BY id DESC
+        ORDER BY report_date DESC
     `;
 
     db.query(sql, (err, results) => {
