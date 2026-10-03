@@ -303,49 +303,111 @@ body {
 
 
 </div>
-
-<script>
-alert("JavaScript is running");
-
-
 <script>
 
 function findDustbins() {
 
     const city = document.getElementById("cityInput").value.trim();
 
-    alert("City entered: " + city);
+    const container =
+        document.getElementById("servicesContainer");
+
+    if (city === "") {
+
+        container.innerHTML = `
+            <div class="error-box">
+                Please enter a city name.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="loading">
+            🔍 Checking verified dustbin records...
+        </div>
+    `;
 
     fetch(
         `https://wastesegregation-production.up.railway.app/dustbins?city=${encodeURIComponent(city)}`
     )
-    .then(response => response.json())
-    .then(data => {
+    .then(response => {
 
-        alert("Dustbins received: " + data.length);
+        if (!response.ok) {
+            throw new Error("Failed to load dustbins");
+        }
 
-        document.getElementById("servicesContainer").innerHTML =
-            JSON.stringify(data);
+        return response.json();
+    })
+    .then(dustbins => {
+
+        if (dustbins.length === 0) {
+
+            container.innerHTML = `
+                <div class="no-results">
+                    ❌ No verified dustbin records found for
+                    <strong>${city}</strong>.
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = "";
+
+        dustbins.forEach(dustbin => {
+
+            container.innerHTML += `
+
+                <div class="service-card">
+
+                    <div class="service-top">
+
+                        <div class="icon">
+                            🗑️
+                        </div>
+
+                        <div class="service-info">
+
+                            <h3>${dustbin.name}</h3>
+
+                            <p>
+                                📍 ${dustbin.location}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="status">
+                        Status:
+                        <strong>${dustbin.status}</strong>
+                    </div>
+
+                </div>
+
+            `;
+        });
 
     })
     .catch(error => {
 
-        alert("Error: " + error.message);
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="error-box">
+                ⚠️ Unable to connect to CleanCity server.
+            </div>
+        `;
 
     });
 }
 
-</script>
-
-
-/* =================================
-   GO HOME
-================================= */
 
 function goHome() {
 
-    window.location.href =
-        "home.html";
+    window.location.href = "home.html";
 
 }
 
