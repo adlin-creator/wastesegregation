@@ -1881,56 +1881,95 @@ function showReports() {
 }
 /* CLEANLINESS POINTS */
 
-let points = 120;
+async function updatePoints() {
 
-function updatePoints() {
+    const storedUser =
+        localStorage.getItem("cleanCityUser");
 
-    document.getElementById("points").innerText = points;
-
-    let level;
-    let title;
-    let progress;
-    let pointsLeft;
-
-    if (points < 100) {
-
-        level = "Level 1";
-        title = "Clean City Beginner";
-        progress = points;
-        pointsLeft = 100 - points;
-
-    } else if (points < 200) {
-
-        level = "Level 2";
-        title = "Clean City Helper";
-        progress = points - 100;
-        pointsLeft = 200 - points;
-
-    } else if (points < 300) {
-
-        level = "Level 3";
-        title = "Clean City Champion";
-        progress = points - 200;
-        pointsLeft = 300 - points;
-
-    } else {
-
-        level = "Level 4";
-        title = "Clean City Star";
-        progress = 100;
-        pointsLeft = 0;
-
+    if (!storedUser) {
+        return;
     }
 
-    document.getElementById("level").innerText = level;
+    const user = JSON.parse(storedUser);
 
-    document.getElementById("levelTitle").innerText = title;
+    if (!user.email) {
+        return;
+    }
 
-    document.getElementById("progressBar").style.width =
-        progress + "%";
+    try {
 
-    document.getElementById("pointsLeft").innerText =
-        pointsLeft;
+        const response = await fetch(
+            "https://wastesegregation-production.up.railway.app/users/points?email=" +
+            encodeURIComponent(user.email)
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || "Unable to load points"
+            );
+        }
+
+        const points = Number(data.points) || 0;
+
+        document.getElementById("points").innerText =
+            points;
+
+        let level;
+        let title;
+        let progress;
+        let pointsLeft;
+
+        if (points < 100) {
+
+            level = "Level 1";
+            title = "Clean City Beginner";
+            progress = points;
+            pointsLeft = 100 - points;
+
+        } else if (points < 200) {
+
+            level = "Level 2";
+            title = "Clean City Helper";
+            progress = points - 100;
+            pointsLeft = 200 - points;
+
+        } else if (points < 300) {
+
+            level = "Level 3";
+            title = "Clean City Champion";
+            progress = points - 200;
+            pointsLeft = 300 - points;
+
+        } else {
+
+            level = "Level 4";
+            title = "Clean City Star";
+            progress = 100;
+            pointsLeft = 0;
+        }
+
+        document.getElementById("level").innerText =
+            level;
+
+        document.getElementById("levelTitle").innerText =
+            title;
+
+        document.getElementById("progressBar").style.width =
+            progress + "%";
+
+        document.getElementById("pointsLeft").innerText =
+            pointsLeft;
+
+    } catch (error) {
+
+        console.error(
+            "Unable to load cleanliness points:",
+            error
+        );
+
+    }
 }
 
 updatePoints();
