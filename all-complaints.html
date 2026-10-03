@@ -188,9 +188,15 @@ async function loadReports() {
             "https://wastesegregation-production.up.railway.app/all-reports"
         );
 
-        const reports =
-            await response.json();
+const text = await response.text();
 
+console.log("Reports response:", text);
+
+if (!response.ok) {
+    throw new Error("Server returned " + response.status);
+}
+
+const reports = JSON.parse(text);
         if (!response.ok) {
             throw new Error(
                 reports.message ||
