@@ -476,9 +476,7 @@ async function loadWasteManagement() {
         // ----------------------------------
 
         const collectionResponse =
-            await fetch(
-                "https://wastesegregation-production.up.railway.app/collection-activities"
-            );
+    await fetch("https://wastesegregation-production.up.railway.app/collection-vehicles");
 
 
         if (!collectionResponse.ok) {
