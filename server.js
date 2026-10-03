@@ -979,13 +979,11 @@ app.get("/collection-vehicles", (req, res) => {
 
     const location = req.query.location;
 
-    if (!location || location.trim() === "") {
+    if (!location) {
         return res.status(400).json({
             message: "Location is required"
         });
     }
-
-    const searchLocation = `%${location.trim()}%`;
 
     const sql = `
         SELECT
@@ -1006,28 +1004,30 @@ app.get("/collection-vehicles", (req, res) => {
         ORDER BY id DESC
     `;
 
+    const search = `%${location}%`;
+
     db.query(
         sql,
-        [
-            searchLocation,
-            searchLocation,
-            searchLocation
-        ],
+        [search, search, search],
         (err, results) => {
 
             if (err) {
-                console.error("Vehicle database error:", err);
+
+                console.log(
+                    "Collection vehicle database error:",
+                    err
+                );
 
                 return res.status(500).json({
-                    message: "Failed to load vehicles"
+                    message: "Failed to load collection vehicles"
                 });
             }
 
             res.json(results);
         }
     );
-});
-// ==========================================
+
+});// ==========================================
 // GET ALL COLLECTION VEHICLES
 // ==========================================
 
