@@ -476,8 +476,9 @@ async function loadWasteManagement() {
         // ----------------------------------
 
         const collectionResponse =
-    await fetch("https://wastesegregation-production.up.railway.app/collection-vehicles");
-
+    await fetch(
+        "https://wastesegregation-production.up.railway.app/collection-vehicles?location=Chennai"
+    );
 
         if (!collectionResponse.ok) {
             throw new Error(
