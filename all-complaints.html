@@ -352,11 +352,10 @@ async function updateStatus(reportId) {
         select.value;
 
     try {
-
-        const response = await fetch(
-            "http://localhost:3001/reports/"
-            + reportId
-            + "/status",
+const response = await fetch(
+    "https://wastesegregation-production.up.railway.app/reports/"
+    + reportId
+    + "/status",
             {
                 method: "PUT",
 
